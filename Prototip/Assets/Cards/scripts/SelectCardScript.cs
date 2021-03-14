@@ -4,18 +4,12 @@ using UnityEngine;
 
 public class SelectCardScript : MonoBehaviour
 {
-    GameObject gameObject;
     private bool isDragging;
-
-    private void Start()
-    {
-        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    }
 
     public void OnMouseDown()
     {
         isDragging = true;
-        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        this.GetComponent<cardPrefabScript>().PutOnTop();
     }
 
     public void OnMouseUp()
