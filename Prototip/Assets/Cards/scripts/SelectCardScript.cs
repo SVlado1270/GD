@@ -7,14 +7,21 @@ public class SelectCardScript : MonoBehaviour
     GameObject gameObject;
     private bool isDragging;
 
+    private void Start()
+    {
+        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    }
+
     public void OnMouseDown()
     {
         isDragging = true;
+        Debug.Log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
     public void OnMouseUp()
     {
         isDragging = false;
+
     }
 
     void Update()
