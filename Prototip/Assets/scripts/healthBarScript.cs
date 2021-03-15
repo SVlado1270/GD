@@ -18,7 +18,6 @@ public class healthBarScript : MonoBehaviour
         bar = transform.Find("Canvas").Find("Slider").GetComponent<Slider>();
         barText = transform.Find("Canvas").Find("Health").GetComponent<TextMeshProUGUI>();
         this.health = maxHealth;
-        applyDamage(29);
         updateSliderValue();
     }
 
@@ -60,6 +59,10 @@ public class healthBarScript : MonoBehaviour
         updateSliderValue();
     }
     
+    public void consumeEffect(Effect e)
+    {
+        applyDamage(e.damage);
+    }
 
 
     // Update is called once per frame

@@ -4,6 +4,18 @@ using UnityEngine;
 using TMPro;
 
 
+public class Effect
+{
+    public Effect(int damage, int shield)
+    {
+        this.damage = damage;
+        this.shield = shield;
+    }
+    public int damage;
+    public int shield;
+    //TODO: add isGlobal field(for aoe damage and shields)
+};
+
 public enum CardFlavour
 {
     Attack,
@@ -13,8 +25,11 @@ public enum CardFlavour
 
 public class cardPrefabScript : MonoBehaviour
 {
+    public Effect effect;
+
     //used for the "on hover" effect
-    public Vector3 scaleOnHighlight = new Vector3(0.5f, 0.5f, 0.5f);
+    public Vector3 scaleOnHighlight = new Vector3(1f, 1f, 1f);
+    public Vector3 scaleOnIdle = new Vector3(0.7f, 0.7f, 0.7f);
     public bool isHighlighted = false; 
 
     public int energy;
@@ -52,7 +67,7 @@ public class cardPrefabScript : MonoBehaviour
         energyText.sortingOrder = GetLatestOrderingIndex();
     }
 
-    public void Init(string title, CardFlavour flavour, string spriteName, string description, int energy) 
+    public void Init(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect) 
     {
         //using a single component to load the sprites so that we dont have to load them for each card
         SpriteManagerScript SPRITES = GameObject.FindGameObjectWithTag("SpriteManager").GetComponent<SpriteManagerScript>();
@@ -81,6 +96,7 @@ public class cardPrefabScript : MonoBehaviour
         this.energy = energy;
         this.description = description;
         this.flavour = flavour;
+        this.effect = effect;
     }
 
     public void removeHighlight()
@@ -89,7 +105,7 @@ public class cardPrefabScript : MonoBehaviour
         {
             isHighlighted = false;
             GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>().PlaceCards();
-            transform.localScale -= scaleOnHighlight;
+            //transform.localScale = scaleOnIdle;
         }
     }
 
@@ -99,7 +115,8 @@ public class cardPrefabScript : MonoBehaviour
         {
             isHighlighted = true;
             PutOnTop();
-            transform.localScale += scaleOnHighlight;
+            transform.localScale = scaleOnHighlight;
+            transform.position += new Vector3(0, 3f);
             transform.rotation = Quaternion.identity;
         }
     }

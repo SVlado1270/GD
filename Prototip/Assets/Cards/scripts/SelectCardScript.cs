@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SelectCardScript : MonoBehaviour
 {
     private bool isDragging;
@@ -15,7 +16,23 @@ public class SelectCardScript : MonoBehaviour
     public void OnMouseUp()
     {
         isDragging = false;
+        castCardIfNeeded();
+    }
 
+    void castCardIfNeeded()
+    {
+        var potentialReceivers = GameObject.FindGameObjectsWithTag("Character");
+        foreach (GameObject potentialReceiver in potentialReceivers)
+        {
+            if ((potentialReceiver.transform.position - transform.position).magnitude < 1f)
+            {
+                // TODO: validate receiver (dont allow casting a shield on the enemy or self inflicted damage)
+                healthBarScript receiver = potentialReceiver.transform.parent.GetComponent<healthBarScript>();
+                receiver.consumeEffect(GetComponent<cardPrefabScript>().effect);
+                // TODO: move to discard pile
+                break;
+            }
+        }
     }
 
     void Update()

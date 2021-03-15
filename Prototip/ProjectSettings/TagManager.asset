@@ -7,6 +7,7 @@ TagManager:
   - SpriteManager
   - Cards
   - CardManager
+  - Character
   layers:
   - Default
   - TransparentFX
