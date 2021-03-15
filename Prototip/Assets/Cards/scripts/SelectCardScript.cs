@@ -25,7 +25,7 @@ public class SelectCardScript : MonoBehaviour
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             transform.Translate(mousePosition);
 
-            Debug.Log(mousePosition);
+            //Debug.Log(mousePosition);
 
            // this..SetActive(false); // false to hide, true to show
         }
