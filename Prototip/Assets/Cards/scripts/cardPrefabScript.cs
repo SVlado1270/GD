@@ -23,10 +23,17 @@ public enum CardFlavour
     Power
 };
 
+public enum CardState
+{
+    InDrawPile,
+    InHand,
+    InDiscardPile
+}
+
 public class cardPrefabScript : MonoBehaviour
 {
     public Effect effect;
-
+    public CardState state = CardState.InDrawPile;
     //used for the "on hover" effect
     public Vector3 scaleOnHighlight = new Vector3(1f, 1f, 1f);
     public Vector3 scaleOnIdle = new Vector3(0.7f, 0.7f, 0.7f);

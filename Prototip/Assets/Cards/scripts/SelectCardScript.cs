@@ -28,7 +28,9 @@ public class SelectCardScript : MonoBehaviour
             {
                 // TODO: validate receiver (dont allow casting a shield on the enemy or self inflicted damage)
                 healthBarScript receiver = potentialReceiver.transform.parent.GetComponent<healthBarScript>();
-                receiver.consumeEffect(GetComponent<cardPrefabScript>().effect);
+                var controller = GetComponent<cardPrefabScript>();
+                receiver.consumeEffect(controller.effect);
+                controller.state = CardState.InDiscardPile;
                 // TODO: move to discard pile
                 break;
             }
