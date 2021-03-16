@@ -21,18 +21,22 @@ public class SelectCardScript : MonoBehaviour
 
     void castCardIfNeeded()
     {
-        var potentialReceivers = GameObject.FindGameObjectsWithTag("Character");
-        foreach (GameObject potentialReceiver in potentialReceivers)
+        var energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
+        var controller = GetComponent<cardPrefabScript>();
+        if (energyManager.canAfford(controller))
         {
-            if ((potentialReceiver.transform.position - transform.position).magnitude < 1f)
+            var potentialReceivers = GameObject.FindGameObjectsWithTag("Character");
+            foreach (GameObject potentialReceiver in potentialReceivers)
             {
-                // TODO: validate receiver (dont allow casting a shield on the enemy or self inflicted damage)
-                healthBarScript receiver = potentialReceiver.transform.parent.GetComponent<healthBarScript>();
-                var controller = GetComponent<cardPrefabScript>();
-                receiver.consumeEffect(controller.effect);
-                controller.state = CardState.InDiscardPile;
-                // TODO: move to discard pile
-                break;
+                if ((potentialReceiver.transform.position - transform.position).magnitude < 1f)
+                {
+                    // TODO: validate receiver (dont allow casting a shield on the enemy or self inflicted damage)
+                    healthBarScript receiver = potentialReceiver.transform.parent.GetComponent<healthBarScript>();
+                    receiver.consumeEffect(controller.effect);
+                    controller.state = CardState.InDiscardPile;
+                    energyManager.consumeCard(controller);
+                    break;
+                }
             }
         }
     }

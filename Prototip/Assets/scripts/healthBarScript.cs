@@ -8,9 +8,11 @@ public class healthBarScript : MonoBehaviour
 {
     public Slider bar;
     public TextMeshProUGUI barText;
+    public TextMeshProUGUI shieldText;
     public int maxHealth = 30;
     public int shield = 0;
     public int health;
+    public bool isPlayer = false;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,7 @@ public class healthBarScript : MonoBehaviour
         barText = transform.Find("Canvas").Find("Health").GetComponent<TextMeshProUGUI>();
         this.health = maxHealth;
         updateSliderValue();
+        UpdateShield();
     }
 
     void updateSliderValue()
@@ -57,11 +60,21 @@ public class healthBarScript : MonoBehaviour
             health -= damage;
         }
         updateSliderValue();
+        UpdateShield();
     }
     
+    public void UpdateShield(int delta=0)
+    {
+        if (isPlayer) //TODO: remove this if
+        {
+            shield += delta;
+            shieldText.SetText(shield.ToString()); //TODO: function to update all UI components
+        }
+    }
     public void consumeEffect(Effect e)
     {
         applyDamage(e.damage);
+        UpdateShield(e.shield);
     }
 
 

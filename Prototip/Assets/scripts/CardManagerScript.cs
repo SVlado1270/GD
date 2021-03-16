@@ -17,20 +17,20 @@ public class CardManagerScript : MonoBehaviour
         //some random cards for testing purposes
         //params:       title,          flavour,            sprite,     description,    energy, effect(dmg, shield)
         InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0));
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0));
-        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "gain 5 block",     1,  new Effect(0, 5));
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0));
-        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "gain 5 block",     1,  new Effect(0, 5));
+        InstantiateCard("Defend", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
+        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
+        InstantiateCard("Defend", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
         InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
+        InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
+        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
+        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
+        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
+        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
+        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
+        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
         InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
         InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
         InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
 
         //TODO add count parameter, allow having the same card multiple times in the deck
 
