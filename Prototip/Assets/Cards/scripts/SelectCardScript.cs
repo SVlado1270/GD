@@ -7,10 +7,11 @@ public class SelectCardScript : MonoBehaviour
 {
     private bool isDragging;
 
+
     public void OnMouseDown()
     {
         isDragging = true;
-        this.GetComponent<cardPrefabScript>().PutOnTop();
+        GetComponent<cardPrefabScript>().PutOnTop();
     }
 
     public void OnMouseUp()
@@ -19,25 +20,51 @@ public class SelectCardScript : MonoBehaviour
         castCardIfNeeded();
     }
 
+    bool CardIsTuchingCharacter(GameObject character)
+    {
+        return GetComponent<BoxCollider2D>().IsTouching(character.GetComponent<BoxCollider2D>());
+    }
+
     void castCardIfNeeded()
     {
         var energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
         var controller = GetComponent<cardPrefabScript>();
         if (energyManager.canAfford(controller))
         {
-            var potentialReceivers = GameObject.FindGameObjectsWithTag("Character");
-            foreach (GameObject potentialReceiver in potentialReceivers)
+            GameObject receiverObject = FindClosestHoveredCharacter();
+            if (receiverObject)
             {
-                if ((potentialReceiver.transform.position - transform.position).magnitude < 1f)
-                {
-                    // TODO: validate receiver (dont allow casting a shield on the enemy or self inflicted damage)
-                    healthBarScript receiver = potentialReceiver.transform.parent.GetComponent<healthBarScript>();
-                    receiver.consumeEffect(controller.effect);
-                    controller.state = CardState.InDiscardPile;
-                    energyManager.consumeCard(controller);
-                    break;
-                }
+                healthBarScript receiver = receiverObject.transform.parent.GetComponent<healthBarScript>();
+                receiver.consumeEffect(controller.effect);
+                controller.state = CardState.InDiscardPile;
+                energyManager.consumeCard(controller);
             }
+        }
+    }
+
+    GameObject FindClosestHoveredCharacter()
+    {
+        var allCharacters = GameObject.FindGameObjectsWithTag("Character");
+        GameObject focusedCharacter = null;
+        float closestHoveringDistance = float.MaxValue;
+        foreach (GameObject character in allCharacters)
+        {
+            character.GetComponent<receiveCardEffectsScript>().SetHighlight(false);
+            float distance = (character.transform.position - transform.position).magnitude;
+            if (distance < closestHoveringDistance && CardIsTuchingCharacter(character))
+            {
+                closestHoveringDistance = distance;
+                focusedCharacter = character;
+            }
+        }
+        return focusedCharacter;
+    }
+    void HighlightCharacterOnHover()
+    {
+        GameObject characterToHighlight = FindClosestHoveredCharacter();
+        if (characterToHighlight)
+        {
+            characterToHighlight.GetComponent<receiveCardEffectsScript>().SetHighlight(true);
         }
     }
 
@@ -45,12 +72,10 @@ public class SelectCardScript : MonoBehaviour
     {
         if (isDragging)
         {
+            HighlightCharacterOnHover();
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
             transform.Translate(mousePosition);
-
-            //Debug.Log(mousePosition);
-
-           // this..SetActive(false); // false to hide, true to show
+            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         }
     }
 }

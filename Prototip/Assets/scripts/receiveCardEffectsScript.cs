@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class receiveCardEffectsScript : MonoBehaviour
 {
-    public bool onFocus = false;
+    public bool highlight = false;
+    GameObject highlightRenderer;
 
-    void OnMouseEnter()
-    {
-        onFocus = true;
-    }
-
-    void OnMouseExit()
-    {
-        onFocus = false;
-    }
     void Start()
     {
-        
+        highlightRenderer = transform.Find("highlight").gameObject;
+    }
+
+
+    public void SetHighlight(bool highlight)
+    {
+        if (this.highlight != highlight)
+        {
+            this.highlight = highlight;
+            highlightRenderer.SetActive(highlight);
+        }
     }
 
     // Update is called once per frame

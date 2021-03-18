@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class NewTurnScript : MonoBehaviour
 {
+    energyManagerScript energyManager;
+    CardManagerScript cardManager;
+    healthBarScript healthBar;
+
+    private void Start()
+    {
+        energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
+        cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
+        healthBar = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
+    }
+
     public void OnButtonPress()
     {
         EnemyTurn();
@@ -12,18 +23,15 @@ public class NewTurnScript : MonoBehaviour
 
     public void PlayerNewTurn()
     {
-        GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>().ResetEnergy();
-        GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>().newHand();
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
-        playerStats.shield = 0;
-        playerStats.UpdateShield();
+        energyManager.ResetEnergy();
+        cardManager.newHand();
+        healthBar.UpdateShield();
     }
 
     public void EnemyTurn()
     {
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
-        playerStats.applyDamage(Random.Range(4, 9));
-        playerStats.shield = 0;
-        playerStats.UpdateShield();
+        healthBar.applyDamage(Random.Range(4, 9));
+        healthBar.shield = 0;
+        healthBar.UpdateShield();
     }
 }

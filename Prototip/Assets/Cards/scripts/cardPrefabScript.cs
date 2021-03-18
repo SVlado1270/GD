@@ -123,7 +123,7 @@ public class cardPrefabScript : MonoBehaviour
             isHighlighted = true;
             PutOnTop();
             transform.localScale = scaleOnHighlight;
-            transform.position += new Vector3(0, 3f);
+            transform.position += new Vector3(0, 2.5f);
             transform.rotation = Quaternion.identity;
         }
     }
