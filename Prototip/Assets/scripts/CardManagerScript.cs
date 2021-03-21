@@ -10,6 +10,7 @@ public class CardManagerScript : MonoBehaviour
     public GameObject cardPrefab;
     public List<GameObject> allCards;
     public float cardWidth;
+    public int cardsToDraw = 5; 
 
 
     void Start()
@@ -125,32 +126,86 @@ public class CardManagerScript : MonoBehaviour
                     discardPileCount++;
                     break;
             }
-            discardPileCountText.SetText("Discard pile: {0}", discardPileCount);
-            drawPileCountText.SetText("Draw pile: {0}", drawPileCount);
+            discardPileCountText.SetText(discardPileCount.ToString());
+            drawPileCountText.SetText(drawPileCount.ToString());
         }
     }
 
-    public void newHand()
+    public void ShuffleDeck()
     {
-        int inHandCount = 0;
+        //TODO
+    }
+
+    public int CountCardsWithState(CardState state)
+    {
+        int counter = 0;
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            if (allCards[i].GetComponent<cardPrefabScript>().state == state)
+            {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    public void MoveDiscardedCardsToDrawPile()
+    {
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            var controller = allCards[i].GetComponent<cardPrefabScript>();
+            if(controller.state == CardState.InDiscardPile)
+            {
+                controller.state = CardState.InDrawPile;
+            }
+        }
+        ShuffleDeck();
+    }
+
+    public void DiscardAllInHandCards()
+    {
         for (int i = 0; i < allCards.Count; i++)
         {
             GameObject card = allCards[i];
             var controller = card.GetComponent<cardPrefabScript>();
-            switch (controller.state)
+            if(controller.state == CardState.InHand)
             {
-                case CardState.InHand:
-                    controller.state = CardState.InDiscardPile;
-                    break;
-                case CardState.InDrawPile:
-                    if (inHandCount < 5)
-                    {
-                        inHandCount++;
-                        controller.state = CardState.InHand;
-                    }
-                    break;
-                case CardState.InDiscardPile:
-                    break;
+                controller.state = CardState.InDiscardPile;
+            }
+        }
+    }
+
+    public bool DrawCard()
+    {
+        var indexes = new List<int>();
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            GameObject card = allCards[i];
+            var controller = card.GetComponent<cardPrefabScript>();
+            if (controller.state == CardState.InDrawPile)
+            {
+                indexes.Add(i);
+            }
+        }
+        if (indexes.Count <= 0)
+        {
+            return false;
+        }
+        var random = Random.Range(0, indexes.Count);
+        allCards[indexes[random]].GetComponent<cardPrefabScript>().state = CardState.InHand;
+        return true;
+    }
+
+    public void newHand()
+    {
+        DiscardAllInHandCards();
+        for (int i = 0; i < cardsToDraw; i++)
+        {
+            var drawPileNotEmpty = DrawCard();
+            if (drawPileNotEmpty == false)
+            {
+                MoveDiscardedCardsToDrawPile();
+                DrawCard();
             }
         }
         PlaceCards();

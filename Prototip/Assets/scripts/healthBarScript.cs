@@ -9,6 +9,7 @@ public class healthBarScript : MonoBehaviour
     public Slider bar;
     public TextMeshProUGUI barText;
     public TextMeshProUGUI shieldText;
+    public GameObject shieldIcon;
     public int maxHealth = 30;
     public int shield = 0;
     public int health;
@@ -17,8 +18,23 @@ public class healthBarScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bar = transform.Find("Canvas").Find("Slider").GetComponent<Slider>();
-        barText = transform.Find("Canvas").Find("Health").GetComponent<TextMeshProUGUI>();
+        //fetch components
+        bar = transform.Find("statsCanvas").Find("Slider").GetComponent<Slider>();
+        barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();
+        shieldText = transform.Find("statsCanvas").Find("shieldCountText").GetComponent<TextMeshProUGUI>();
+        shieldIcon = transform.Find("statsCanvas").Find("shieldIcon").gameObject;
+
+        //put health bar above character 
+        var old = bar.transform.position;
+        Vector3 worldHealthBarPos = new Vector3(transform.position.x, transform.position.y + 2.5f);
+        bar.transform.position = Camera.main.WorldToScreenPoint(worldHealthBarPos);
+        var delta = bar.transform.position - old;
+
+        //translate the other stats components so their placement is the same relative to the healthbar
+        barText.transform.Translate(delta);
+        shieldText.transform.Translate(delta);
+        shieldIcon.transform.Translate(delta);
+
         this.health = maxHealth;
         updateSliderValue();
         UpdateShield();
@@ -65,11 +81,8 @@ public class healthBarScript : MonoBehaviour
     
     public void UpdateShield(int delta=0)
     {
-        if (isPlayer) //TODO: remove this if
-        {
-            shield += delta;
-            shieldText.SetText(shield.ToString()); //TODO: function to update all UI components
-        }
+        shield += delta;
+        shieldText.SetText(shield.ToString());
     }
     public void consumeEffect(Effect e)
     {
