@@ -263,10 +263,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f24df0c65c53247ab734d450e4b54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
+  scaleOnHighlight: {x: 1, y: 1, z: 1}
+  scaleOnIdle: {x: 0.7, y: 0.7, z: 0.7}
+  isHighlighted: 0
   energy: 69
   description: pls work
   spriteName: bonk2
   flavour: 2
+  cardBody: {fileID: 0}
 --- !u!1 &3987608770197099245
 GameObject:
   m_ObjectHideFlags: 0

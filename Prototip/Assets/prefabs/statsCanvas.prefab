@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4049669793133662792}
   - component: {fileID: 4049669793133662790}
   - component: {fileID: 4049669793133662793}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 4049669793140328336}
   - component: {fileID: 4049669793140328334}
   - component: {fileID: 4049669793140328337}
+  - component: {fileID: 4339590759729332802}
   m_Layer: 5
   m_Name: shieldIcon
   m_TagString: Untagged
@@ -148,6 +149,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4339590759729332802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049669793140328339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  message: Block
 --- !u!1 &4049669793546504909
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4049669793546504906}
   - component: {fileID: 4049669793546504907}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +261,7 @@ GameObject:
   - component: {fileID: 4049669793750764673}
   - component: {fileID: 4049669793750764799}
   - component: {fileID: 4049669793750764798}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,7 +336,7 @@ GameObject:
   - component: {fileID: 4049669793799344740}
   - component: {fileID: 4049669793799344743}
   - component: {fileID: 4049669793799344742}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: statsCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +568,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4049669794147459007}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}

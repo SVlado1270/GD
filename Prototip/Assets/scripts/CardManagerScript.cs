@@ -16,39 +16,10 @@ public class CardManagerScript : MonoBehaviour
     void Start()
     {
         //some random cards for testing purposes
-        //params:       title,          flavour,            sprite,     description,    energy, effect(dmg, shield)
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0));
-        InstantiateCard("Defend", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend3", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike3", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
-        InstantiateCard("Defend2", CardFlavour.Skill, "silent5", "gain 5 block", 1, new Effect(0, 5));
-        InstantiateCard("Strike2", CardFlavour.Attack, "silent1", "deals 6 damage", 1, new Effect(6, 0));
+        //params:       title,          flavour,            sprite,     description,    energy, effect(dmg, shield),    count
+        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0),       15);
+        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "gain 5 block",     1,  new Effect(0, 5),       15);
 
-        //TODO add count parameter, allow having the same card multiple times in the deck
 
         newHand();
         PlaceCards();
@@ -56,12 +27,15 @@ public class CardManagerScript : MonoBehaviour
 
 
 
-    void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect)
+    void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect, int count=1)
     {
-        GameObject card = Instantiate(cardPrefab, this.transform.position, Quaternion.identity);
-        cardPrefabScript cardController = card.GetComponent<cardPrefabScript>();
-        cardController.Init(title, flavour, spriteName, description, energy, effect);
-        allCards.Add(card);
+        for (int i = 0; i < count; i++)
+        {
+            GameObject card = Instantiate(cardPrefab, this.transform.position, Quaternion.identity);
+            cardPrefabScript cardController = card.GetComponent<cardPrefabScript>();
+            cardController.Init(title, flavour, spriteName, description, energy, effect);
+            allCards.Add(card);
+        }
     }
 
     public void PlaceCards()
@@ -93,7 +67,7 @@ public class CardManagerScript : MonoBehaviour
         float cardWidth = 4f;  // TODO: remove hardcoded value
         cardWidth *= cardScale;
         float spacing = cardWidth * 0.9f; // spacing is less than the card width so they overlap a little bit
-        if (spacing * (inHandCards - 1)> maxWidth)
+        if (spacing * (inHandCards - 1) > maxWidth)
         {
             spacing = maxWidth / (inHandCards - 1);
         }
@@ -131,11 +105,6 @@ public class CardManagerScript : MonoBehaviour
         }
     }
 
-    public void ShuffleDeck()
-    {
-        //TODO
-    }
-
     public int CountCardsWithState(CardState state)
     {
         int counter = 0;
@@ -157,9 +126,9 @@ public class CardManagerScript : MonoBehaviour
             if(controller.state == CardState.InDiscardPile)
             {
                 controller.state = CardState.InDrawPile;
+                //TODO: trigger ? animation
             }
         }
-        ShuffleDeck();
     }
 
     public void DiscardAllInHandCards()
@@ -171,11 +140,12 @@ public class CardManagerScript : MonoBehaviour
             if(controller.state == CardState.InHand)
             {
                 controller.state = CardState.InDiscardPile;
+                //TODO: trigger discard animation
             }
         }
     }
 
-    public bool DrawCard()
+    public bool DrawRandomCard()
     {
         var indexes = new List<int>();
         for (int i = 0; i < allCards.Count; i++)
@@ -193,6 +163,7 @@ public class CardManagerScript : MonoBehaviour
         }
         var random = Random.Range(0, indexes.Count);
         allCards[indexes[random]].GetComponent<cardPrefabScript>().state = CardState.InHand;
+        //TODO: trigger draw animation
         return true;
     }
 
@@ -201,11 +172,11 @@ public class CardManagerScript : MonoBehaviour
         DiscardAllInHandCards();
         for (int i = 0; i < cardsToDraw; i++)
         {
-            var drawPileNotEmpty = DrawCard();
+            var drawPileNotEmpty = DrawRandomCard();
             if (drawPileNotEmpty == false)
             {
                 MoveDiscardedCardsToDrawPile();
-                DrawCard();
+                DrawRandomCard();
             }
         }
         PlaceCards();

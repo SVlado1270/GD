@@ -8,6 +8,7 @@ TagManager:
   - Cards
   - CardManager
   - Character
+  - Tooltip
   layers:
   - Default
   - TransparentFX

@@ -112,7 +112,6 @@ public class cardPrefabScript : MonoBehaviour
         {
             isHighlighted = false;
             GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>().PlaceCards();
-            //transform.localScale = scaleOnIdle;
         }
     }
 
