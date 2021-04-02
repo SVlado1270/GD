@@ -27,7 +27,8 @@ public enum CardState
 {
     InDrawPile,
     InHand,
-    InDiscardPile
+    InDiscardPile,
+    Selected
 }
 
 public class cardPrefabScript : MonoBehaviour
@@ -132,14 +133,5 @@ public class cardPrefabScript : MonoBehaviour
     }
     void Update()
     {
-    }
-    void OnMouseOver()
-    {
-        Highlight();
-    }
-
-    void OnMouseExit()
-    {
-        removeHighlight();
     }
 }

@@ -6,13 +6,13 @@ public class NewTurnScript : MonoBehaviour
 {
     energyManagerScript energyManager;
     CardManagerScript cardManager;
-    healthBarScript healthBar;
+    healthBarScript playerStats;
 
     private void Start()
     {
         energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
         cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
-        healthBar = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
+        playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
     }
 
     public void OnButtonPress()
@@ -25,13 +25,13 @@ public class NewTurnScript : MonoBehaviour
     {
         energyManager.ResetEnergy();
         cardManager.newHand();
-        healthBar.UpdateShield();
+        playerStats.UpdateShield();
     }
 
     public void EnemyTurn()
     {
-        healthBar.applyDamage(Random.Range(4, 9));
-        healthBar.shield = 0;
-        healthBar.UpdateShield();
+        playerStats.applyDamage(Random.Range(4, 9));
+        playerStats.shield = 0;
+        playerStats.UpdateShield();
     }
 }

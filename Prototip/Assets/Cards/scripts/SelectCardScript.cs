@@ -5,19 +5,69 @@ using UnityEngine;
 
 public class SelectCardScript : MonoBehaviour
 {
-    private bool isDragging;
+    private bool isDragging = false;
+    private CardManagerScript cardManager;
+    private cardPrefabScript controller;
+
+
+    private void Start()
+    {
+        cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
+        controller = GetComponent<cardPrefabScript>();
+    }
+
 
 
     public void OnMouseDown()
     {
-        isDragging = true;
-        GetComponent<cardPrefabScript>().PutOnTop();
+        switch (cardManager.gameState)
+        {
+            case GameState.Combat:
+                isDragging = true;
+                controller.PutOnTop();
+                break;
+            case GameState.SelectCards:
+                if (controller.state == CardState.InHand)
+                {
+                    controller.state = CardState.Selected;
+                }
+                else if (controller.state == CardState.Selected) 
+                {
+                    controller.state = CardState.InHand;
+                }
+                cardManager.PlaceCards();
+                break;
+        }
     }
 
     public void OnMouseUp()
     {
-        isDragging = false;
-        castCardIfNeeded();
+        switch (cardManager.gameState)
+        {
+            case GameState.Combat:
+                isDragging = false;
+                castCardIfNeeded();
+                break;
+        }
+    }
+    void OnMouseOver()
+    {
+        switch (controller.state)
+        {
+            case CardState.InHand:
+                controller.Highlight();
+                break;
+        }
+    }
+
+    void OnMouseExit()
+    {
+        switch (controller.state)
+        {
+            case CardState.InHand:
+                controller.removeHighlight();
+                break;
+        }
     }
 
     bool CardIsTuchingCharacter(GameObject character)
@@ -28,17 +78,20 @@ public class SelectCardScript : MonoBehaviour
     void castCardIfNeeded()
     {
         var energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
-        var controller = GetComponent<cardPrefabScript>();
-        if (energyManager.canAfford(controller))
+
+        if (energyManager.canAfford(controller) == false)
         {
-            GameObject receiverObject = FindClosestHoveredCharacter();
-            if (receiverObject)
-            {
-                healthBarScript receiver = receiverObject.transform.parent.GetComponent<healthBarScript>();
-                receiver.consumeEffect(controller.effect);
-                controller.state = CardState.InDiscardPile;
-                energyManager.consumeCard(controller);
-            }
+            TooltipScript.ShowTooltip("not enough energy", 1f);
+            return;
+        }
+
+        GameObject receiverObject = FindClosestHoveredCharacter();
+        if (receiverObject)
+        {
+            healthBarScript receiver = receiverObject.transform.parent.GetComponent<healthBarScript>();
+            receiver.consumeEffect(controller.effect);
+            controller.state = CardState.InDiscardPile;
+            energyManager.consumeCard(controller);
         }
     }
 
@@ -70,12 +123,15 @@ public class SelectCardScript : MonoBehaviour
 
     void Update()
     {
-        if (isDragging)
+        if(cardManager.gameState == GameState.Combat)
         {
-            HighlightCharacterOnHover();
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-            transform.Translate(mousePosition);
-            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            if (isDragging)
+            {
+                HighlightCharacterOnHover();
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+                transform.Translate(mousePosition);
+                transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            }
         }
     }
 }

@@ -19,11 +19,8 @@ public class TooltipScript : MonoBehaviour
         HideTooltip();
     }
 
-    public static void ShowTooltip(string tooltipString)
+    private static void SetTextAndBackground(string tooltipString)
     {
-        isTimed = false;
-        tooltip.gameObject.SetActive(true);
-
         tooltipText.text = tooltipString;
 
         float padding = 4f;
@@ -32,17 +29,24 @@ public class TooltipScript : MonoBehaviour
         Vector2 backgroundSize = new Vector2(width, height);
 
         backgroundRectTransform.sizeDelta = backgroundSize;
+        tooltip.gameObject.SetActive(true);
+    }
+    public static void ShowTooltip(string tooltipString)
+    {
+        isTimed = false;
+        SetTextAndBackground(tooltipString);
     }
 
     public static void ShowTooltip(string tooltipString, float time)
     {
         timeLeft = time;
         isTimed = true;
-        ShowTooltip(tooltipString);
+        SetTextAndBackground(tooltipString);
     }
 
     public static void HideTooltip()
     {
+        isTimed = false;
         tooltip.gameObject.SetActive(false);
     }
 

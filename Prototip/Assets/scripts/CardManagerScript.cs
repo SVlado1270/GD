@@ -3,18 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+
+public enum GameState
+{
+    Combat,
+    SelectCards,
+    DisplayDeck
+}
+
 public class CardManagerScript : MonoBehaviour
 {
+    public GameState gameState;
     public TextMeshProUGUI discardPileCountText;
     public TextMeshProUGUI drawPileCountText;
     public GameObject cardPrefab;
     public List<GameObject> allCards;
-    public float cardWidth;
-    public int cardsToDraw = 5; 
+    public int cardsToDraw = 5;
+    int nCardsToSelect;
 
+
+    //UI placement constants
+    const float cardScale = 0.7f;
+    const float maxRotation = 15f;
+    const float maxWidth = 800f;  // TODO: remove hardcoded value
+    //spacing = cardWidth - some overlapping
+    const float cardWidth = 4f * cardScale;  // TODO: remove hardcoded value
+    const float spacing = cardWidth * 0.9f; // spacing is less than the card width so they overlap a little bit
 
     void Start()
     {
+        gameState = GameState.SelectCards;
+        nCardsToSelect = 0;
         //some random cards for testing purposes
         //params:       title,          flavour,            sprite,     description,    energy, effect(dmg, shield),    count
         InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0),       15);
@@ -25,7 +44,32 @@ public class CardManagerScript : MonoBehaviour
         PlaceCards();
     }
 
+    public void SelectCardsMode(int nCardsToSelect) 
+    {
+        gameState = GameState.SelectCards;
+        this.nCardsToSelect = nCardsToSelect;
+    }
 
+    public void DiscardCardsWithState(CardState state)
+    {
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            GameObject card = allCards[i];
+            var controller = card.GetComponent<cardPrefabScript>();
+            if (controller.state == state)
+            {
+                controller.state = CardState.InDiscardPile;
+                //TODO: trigger discard animation
+            }
+        }
+    }
+
+    public void ConfirmSelected()
+    {
+        gameState = GameState.Combat;
+        this.nCardsToSelect = 0;
+        DiscardCardsWithState(CardState.InDiscardPile);
+    }
 
     void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect, int count=1)
     {
@@ -40,43 +84,24 @@ public class CardManagerScript : MonoBehaviour
 
     public void PlaceCards()
     {
-        float cardScale = 0.7f;
-        float maxRotation = 15f;
-        float perCardRotation;
+        int inHandCards = CountCardsWithState(CardState.InHand);
+        float perCardRotation = inHandCards == 1 ? 0f : 2 * maxRotation / (inHandCards - 1);
 
-        int inHandCards = 0;
-        for (int i = 0; i < allCards.Count; i++)
+        float inHandSpacing = spacing;
+        if (inHandSpacing * (inHandCards - 1) > maxWidth) // if current spacing makes cards exit screen boundries --> increase overlapping
         {
-            cardPrefabScript controller = allCards[i].GetComponent<cardPrefabScript>();
-            if (controller.state == CardState.InHand)
-            {
-                inHandCards++;
-            }
-        }
-
-        if (inHandCards == 1)
-        {
-            perCardRotation = 0f;
-        }
-        else
-        {
-            perCardRotation = 2 * maxRotation / (inHandCards - 1);
-        }
-        float maxWidth = 800f;  // TODO: remove hardcoded value
-        //spacing = cardWidth - some overlapping
-        float cardWidth = 4f;  // TODO: remove hardcoded value
-        cardWidth *= cardScale;
-        float spacing = cardWidth * 0.9f; // spacing is less than the card width so they overlap a little bit
-        if (spacing * (inHandCards - 1) > maxWidth)
-        {
-            spacing = maxWidth / (inHandCards - 1);
+            inHandSpacing = maxWidth / (inHandCards - 1);
         }
         Vector2 center = transform.position;
-        float leftCoord = center.x - spacing * (inHandCards - 1) / 2;
+        float leftCoord = center.x - inHandSpacing * (inHandCards - 1) / 2;
 
-        int drawPileCount = 0;
-        int discardPileCount = 0;
+        int nSelectedCards = CountCardsWithState(CardState.Selected);
+        Vector2 selectedCenter = transform.position + new Vector3(0, 10f);
+        float selectedSpacing = 2 * inHandSpacing;
+        float selectedLeftCoord = selectedCenter.x - selectedSpacing * (nSelectedCards - 1) / 2;
+
         int inHandIndex = 0;
+        int selectedIndex = 0;
         for (int i = 0; i < allCards.Count; i++)
         {
             GameObject card = allCards[i];
@@ -86,22 +111,27 @@ public class CardManagerScript : MonoBehaviour
                 case CardState.InHand:
                     card.gameObject.SetActive(true);
                     card.transform.rotation = Quaternion.Euler(0, 0, maxRotation - inHandIndex * perCardRotation);
-                    card.transform.localPosition = new Vector2(leftCoord + inHandIndex * spacing, center.y);
+                    card.transform.localPosition = new Vector2(leftCoord + inHandIndex * inHandSpacing, center.y);
                     card.transform.localScale = new Vector3(cardScale, cardScale, cardScale);
                     inHandIndex++;
                     controller.PutOnTop();
                     break;
+                case CardState.Selected:
+                    card.gameObject.SetActive(true);
+                    card.transform.localPosition = new Vector2(selectedLeftCoord + selectedIndex * selectedSpacing, selectedCenter.y);
+                    card.transform.localScale = new Vector3(cardScale, cardScale, cardScale);
+                    selectedIndex++;
+                    controller.PutOnTop();
+                    break;
                 case CardState.InDrawPile:
                     card.gameObject.SetActive(false);
-                    drawPileCount++;
                     break;
                 case CardState.InDiscardPile:
                     card.gameObject.SetActive(false);
-                    discardPileCount++;
                     break;
             }
-            discardPileCountText.SetText(discardPileCount.ToString());
-            drawPileCountText.SetText(drawPileCount.ToString());
+            discardPileCountText.SetText(CountCardsWithState(CardState.InDiscardPile).ToString());
+            drawPileCountText.SetText(CountCardsWithState(CardState.InDrawPile).ToString());
         }
     }
 
@@ -131,19 +161,6 @@ public class CardManagerScript : MonoBehaviour
         }
     }
 
-    public void DiscardAllInHandCards()
-    {
-        for (int i = 0; i < allCards.Count; i++)
-        {
-            GameObject card = allCards[i];
-            var controller = card.GetComponent<cardPrefabScript>();
-            if(controller.state == CardState.InHand)
-            {
-                controller.state = CardState.InDiscardPile;
-                //TODO: trigger discard animation
-            }
-        }
-    }
 
     public bool DrawRandomCard()
     {
@@ -169,7 +186,7 @@ public class CardManagerScript : MonoBehaviour
 
     public void newHand()
     {
-        DiscardAllInHandCards();
+        DiscardCardsWithState(CardState.InHand);
         for (int i = 0; i < cardsToDraw; i++)
         {
             var drawPileNotEmpty = DrawRandomCard();
