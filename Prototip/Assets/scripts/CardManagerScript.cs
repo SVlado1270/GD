@@ -21,6 +21,8 @@ public class CardManagerScript : MonoBehaviour
     public int cardsToDraw = 5;
     int nCardsToSelect;
 
+    public GameObject confirmButton;
+
 
     //UI placement constants
     const float cardScale = 0.7f;
@@ -48,6 +50,7 @@ public class CardManagerScript : MonoBehaviour
     {
         gameState = GameState.SelectCards;
         this.nCardsToSelect = nCardsToSelect;
+        confirmButton.SetActive(true);
     }
 
     public void DiscardCardsWithState(CardState state)
@@ -68,7 +71,9 @@ public class CardManagerScript : MonoBehaviour
     {
         gameState = GameState.Combat;
         this.nCardsToSelect = 0;
-        DiscardCardsWithState(CardState.InDiscardPile);
+        DiscardCardsWithState(CardState.Selected);
+        confirmButton.SetActive(false);
+        PlaceCards();
     }
 
     void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect, int count=1)
