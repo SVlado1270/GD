@@ -30,7 +30,7 @@ public class NewTurnScript : MonoBehaviour
 
     public void EnemyTurn()
     {
-        playerStats.applyDamage(Random.Range(4, 9));
+        playerStats.consumeEffect(new Effect(Random.Range(4, 9), 0));
         playerStats.shield = 0;
         playerStats.UpdateShield();
     }

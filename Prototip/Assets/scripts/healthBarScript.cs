@@ -15,6 +15,13 @@ public class healthBarScript : MonoBehaviour
     public int health;
     public bool isPlayer = false;
 
+    float HeroHitAudioLength;
+
+    public GameObject avatar;
+    Animator PlayerAnimator, EnemyAnimator;
+    AudioSource[] audio;
+    AudioSource v_audio;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,12 +45,19 @@ public class healthBarScript : MonoBehaviour
         this.health = maxHealth;
         updateSliderValue();
         UpdateShield();
+
+
+        PlayerAnimator = GameObject.Find("Character/Hero/Silent/avatar").GetComponent<Animator>();
+        EnemyAnimator = GameObject.Find("Character/Villans/cultist/avatar").GetComponent<Animator>();
+        audio = GameObject.Find("Character/Hero/Silent/avatar").GetComponents<AudioSource>();
+        v_audio = GameObject.Find("Character/Villans/cultist/avatar").GetComponent<AudioSource>();
+
     }
 
     void updateSliderValue()
     {
         float value = (float)health / (float)maxHealth;
-        if(value < 0f)
+        if (value < 0f)
         {
             value = 0;
         }
@@ -58,9 +72,10 @@ public class healthBarScript : MonoBehaviour
 
     public void applyDamage(int damage)
     {
-        if(shield > 0)
+
+        if (shield > 0)
         {
-            if(shield > damage)
+            if (shield > damage)
             {
                 shield -= damage;
             }
@@ -78,14 +93,55 @@ public class healthBarScript : MonoBehaviour
         updateSliderValue();
         UpdateShield();
     }
-    
-    public void UpdateShield(int delta=0)
+
+    public void UpdateShield(int delta = 0)
     {
         shield += delta;
         shieldText.SetText(shield.ToString());
     }
+
     public void consumeEffect(Effect e)
     {
+        Debug.Log(isPlayer);
+
+        if (e.damage > 0)
+        {
+            // ANIMATIE PLAYER + AUDIO ATAC
+            if (!isPlayer)
+            {
+
+                Debug.Log("Playerul ataca brra");
+                PlayerAnimator.SetBool("isPlayer", true);
+
+
+                PlayerAnimator.Play("Hero_hit");
+                audio[0].PlayOneShot(audio[0].clip, audio[0].clip.length);
+
+
+                PlayerAnimator.SetBool("isPlayer", false);
+            }
+        }
+
+        if (isPlayer && e.damage > 0)
+        {
+            Debug.Log("CACAW");
+            EnemyAnimator.SetBool("isAttacking", true);
+
+
+            EnemyAnimator.Play("Cultist_hit");
+            v_audio.PlayOneShot(v_audio.clip, v_audio.clip.length);
+
+
+            EnemyAnimator.SetBool("isAttacking", false);
+        }
+
+
+        //AUDIO SHIELD
+        if (e.shield > 0)
+        {
+            audio[1].PlayOneShot(audio[1].clip, audio[1].clip.length);
+        }
+
         applyDamage(e.damage);
         UpdateShield(e.shield);
     }
@@ -94,6 +150,6 @@ public class healthBarScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
