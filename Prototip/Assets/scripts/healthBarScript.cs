@@ -8,6 +8,7 @@ public class healthBarScript : MonoBehaviour
 {
     public Slider bar;
     public TextMeshProUGUI barText;
+    public TextMeshProUGUI endText;
     public TextMeshProUGUI shieldText;
     public GameObject shieldIcon;
     public int maxHealth = 30;
@@ -18,6 +19,7 @@ public class healthBarScript : MonoBehaviour
     float HeroHitAudioLength;
 
     public GameObject avatar;
+    public GameObject corpseAvatar; 
     Animator PlayerAnimator, EnemyAnimator;
     AudioSource[] audio;
     AudioSource v_audio;
@@ -30,6 +32,10 @@ public class healthBarScript : MonoBehaviour
         barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();
         shieldText = transform.Find("statsCanvas").Find("shieldCountText").GetComponent<TextMeshProUGUI>();
         shieldIcon = transform.Find("statsCanvas").Find("shieldIcon").gameObject;
+
+        avatar = transform.Find("avatar").gameObject;
+
+        endText = GameObject.Find("infoUI/Canvas/EndGame").GetComponent<TextMeshProUGUI>();
 
         //put health bar above character 
         var old = bar.transform.position;
@@ -48,9 +54,9 @@ public class healthBarScript : MonoBehaviour
 
 
         PlayerAnimator = GameObject.Find("Character/Hero/Silent/avatar").GetComponent<Animator>();
-        EnemyAnimator = GameObject.Find("Character/Villans/cultist/avatar").GetComponent<Animator>();
+        EnemyAnimator = GameObject.Find("Character/Villains/cultist/avatar").GetComponent<Animator>();
         audio = GameObject.Find("Character/Hero/Silent/avatar").GetComponents<AudioSource>();
-        v_audio = GameObject.Find("Character/Villans/cultist/avatar").GetComponent<AudioSource>();
+        v_audio = GameObject.Find("Character/Villains/cultist/avatar").GetComponent<AudioSource>();
 
     }
 
@@ -92,6 +98,25 @@ public class healthBarScript : MonoBehaviour
         }
         updateSliderValue();
         UpdateShield();
+
+        if (health <= 0)
+        {
+            endText.gameObject.SetActive(true);
+
+            if (isPlayer)
+            {
+                corpseAvatar.SetActive(true);
+                avatar.SetActive(false);
+                endText.SetText("Game over!");
+            }
+            else
+            {
+                avatar.SetActive(false);
+                endText.SetText("You win!");
+            }
+            
+            transform.Find("statsCanvas").gameObject.SetActive(false);
+        }
     }
 
     public void UpdateShield(int delta = 0)
