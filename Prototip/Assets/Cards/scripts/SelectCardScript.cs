@@ -47,6 +47,7 @@ public class SelectCardScript : MonoBehaviour
             case GameState.Combat:
                 isDragging = false;
                 castCardIfNeeded();
+                cardManager.PlaceCards();
                 break;
         }
     }
