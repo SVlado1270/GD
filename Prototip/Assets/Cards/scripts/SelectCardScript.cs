@@ -27,7 +27,7 @@ public class SelectCardScript : MonoBehaviour
                 controller.PutOnTop();
                 break;
             case GameState.SelectCards:
-                if (controller.state == CardState.InHand)
+                if (controller.state == CardState.InHand && cardManager.CountCardsWithState(CardState.Selected) < cardManager.nCardsToSelect)
                 {
                     controller.state = CardState.Selected;
                 }
@@ -90,9 +90,18 @@ public class SelectCardScript : MonoBehaviour
         if (receiverObject)
         {
             healthBarScript receiver = receiverObject.transform.parent.GetComponent<healthBarScript>();
+            if (receiver.isPlayer != controller.effect.targetType.Equals(TargetType.Player))
+            {
+                TooltipScript.ShowTooltip("forbidden action", 1f);
+                return;
+            }
             receiver.consumeEffect(controller.effect);
             controller.state = CardState.InDiscardPile;
             energyManager.consumeCard(controller);
+            if (controller.effect.exhaust)
+            {
+                controller.state = CardState.Exhausted;
+            }
         }
     }
 

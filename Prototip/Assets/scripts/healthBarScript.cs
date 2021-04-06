@@ -21,7 +21,7 @@ public class healthBarScript : MonoBehaviour
     public GameObject avatar;
     public GameObject corpseAvatar; 
     Animator PlayerAnimator, EnemyAnimator;
-    AudioSource[] audio;
+    AudioSource[] nAudio;
     AudioSource v_audio;
 
     // Start is called before the first frame update
@@ -55,7 +55,7 @@ public class healthBarScript : MonoBehaviour
 
         PlayerAnimator = GameObject.Find("Character/Hero/Silent/avatar").GetComponent<Animator>();
         EnemyAnimator = GameObject.Find("Character/Villains/cultist/avatar").GetComponent<Animator>();
-        audio = GameObject.Find("Character/Hero/Silent/avatar").GetComponents<AudioSource>();
+        nAudio = GameObject.Find("Character/Hero/Silent/avatar").GetComponents<AudioSource>();
         v_audio = GameObject.Find("Character/Villains/cultist/avatar").GetComponent<AudioSource>();
 
     }
@@ -116,6 +116,8 @@ public class healthBarScript : MonoBehaviour
             }
             
             transform.Find("statsCanvas").gameObject.SetActive(false);
+            GameObject.FindGameObjectWithTag("EndTurnButton").SetActive(false);
+            GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>().gameState = GameState.GameOver;
         }
     }
 
@@ -127,21 +129,15 @@ public class healthBarScript : MonoBehaviour
 
     public void consumeEffect(Effect e)
     {
-        Debug.Log(isPlayer);
-
         if (e.damage > 0)
         {
             // ANIMATIE PLAYER + AUDIO ATAC
             if (!isPlayer)
             {
-
-                Debug.Log("Playerul ataca brra");
                 PlayerAnimator.SetBool("isPlayer", true);
 
-
                 PlayerAnimator.Play("Hero_hit");
-                audio[0].PlayOneShot(audio[0].clip, audio[0].clip.length);
-
+                nAudio[0].PlayOneShot(nAudio[0].clip, nAudio[0].clip.length);
 
                 PlayerAnimator.SetBool("isPlayer", false);
             }
@@ -149,26 +145,23 @@ public class healthBarScript : MonoBehaviour
 
         if (isPlayer && e.damage > 0)
         {
-            Debug.Log("CACAW");
             EnemyAnimator.SetBool("isAttacking", true);
-
 
             EnemyAnimator.Play("Cultist_hit");
             v_audio.PlayOneShot(v_audio.clip, v_audio.clip.length);
 
-
             EnemyAnimator.SetBool("isAttacking", false);
         }
-
 
         //AUDIO SHIELD
         if (e.shield > 0)
         {
-            audio[1].PlayOneShot(audio[1].clip, audio[1].clip.length);
+            nAudio[1].PlayOneShot(nAudio[1].clip, nAudio[1].clip.length);
         }
 
         applyDamage(e.damage);
         UpdateShield(e.shield);
+        e.ApplyMeta();
     }
 
 

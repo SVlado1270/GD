@@ -4,16 +4,48 @@ using UnityEngine;
 using TMPro;
 
 
+public enum TargetType
+{
+    Player,
+    Enemy
+}
 public class Effect
 {
-    public Effect(int damage, int shield)
+    public Effect(TargetType targetType)
     {
-        this.damage = damage;
-        this.shield = shield;
+        this.targetType = targetType;
+        damage = 0;
+        shield = 0;
+        cardsToDraw = 0;
+        cardsToDiscard = 0;
+        cardsToRetain = 0;
+        exhaust = false;
     }
     public int damage;
     public int shield;
-    //TODO: add isGlobal field(for aoe damage and shields)
+    public int cardsToDraw;
+    public int cardsToDiscard;
+    public int cardsToRetain;
+    public bool exhaust;
+    public TargetType targetType;
+
+    public void ApplyMeta()
+    {
+        CardManagerScript cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
+        for (int i = 0; i < cardsToDraw; i++)
+        {
+            cardManager.ForceDrawRandomCard();
+        }
+        if (cardsToDiscard > 0)
+        {
+            cardManager.SelectCardsMode(cardsToDiscard, CardSelectionType.Discard);
+        }
+        if (cardsToRetain > cardManager.retainUpToNCards)
+        {
+            cardManager.hasRetained = false;
+            cardManager.retainUpToNCards = cardsToRetain;
+        }
+    }
 };
 
 public enum CardFlavour
@@ -28,7 +60,9 @@ public enum CardState
     InDrawPile,
     InHand,
     InDiscardPile,
-    Selected
+    Selected,
+    Retained,
+    Exhausted
 }
 
 public class cardPrefabScript : MonoBehaviour

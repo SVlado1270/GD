@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 
 public enum GameState
 {
     Combat,
     SelectCards,
-    DisplayDeck
+    DisplayDeck,
+    GameOver
+}
+
+public enum CardSelectionType
+{
+    Discard,
+    Retain
 }
 
 public class CardManagerScript : MonoBehaviour
@@ -16,10 +24,14 @@ public class CardManagerScript : MonoBehaviour
     public GameState gameState;
     public TextMeshProUGUI discardPileCountText;
     public TextMeshProUGUI drawPileCountText;
+    public TextMeshProUGUI exhaustPileCountText;
     public GameObject cardPrefab;
     public List<GameObject> allCards;
     public int cardsToDraw = 5;
-    int nCardsToSelect;
+    public int nCardsToSelect;
+    public int retainUpToNCards = 0;
+    public bool hasRetained = true;
+    public CardSelectionType cardSelectionType;
 
     public GameObject confirmButton;
 
@@ -34,23 +46,37 @@ public class CardManagerScript : MonoBehaviour
 
     void Start()
     {
-        gameState = GameState.SelectCards;
+        gameState = GameState.Combat;
         nCardsToSelect = 0;
         //some random cards for testing purposes
-        //params:       title,          flavour,            sprite,     description,    energy, effect(dmg, shield),    count
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "deals 6 damage",   1,  new Effect(6, 0),       15);
-        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "gain 5 block",     1,  new Effect(0, 5),       15);
-
+        //params:       title,          flavour,            sprite,     description,        energy, effect,                                         count
+        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "Deal 6 damage.",   1,      new Effect(TargetType.Enemy) {damage = 6},       6);
+        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "Gain 5 block.",     1,      new Effect(TargetType.Player) {shield = 5},      6);
+        InstantiateCard("Draw", CardFlavour.Skill, "silent2", "Draw two cards.", 1, new Effect(TargetType.Player) { cardsToDraw = 2 },  2);
+        InstantiateCard("Compromise", CardFlavour.Skill, "silent4", "Gain 8 block, discard one card.", 1, new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 }, 3);
+        InstantiateCard("Retain", CardFlavour.Power, "silent7", "At the end of every turn retain up to one card. Exhaust.", 2, new Effect(TargetType.Player) { cardsToRetain = 1, exhaust = true }, 1);
 
         newHand();
         PlaceCards();
     }
 
-    public void SelectCardsMode(int nCardsToSelect) 
+    public void SelectCardsMode(int nCardsToSelect, CardSelectionType cardSelectionType) 
     {
         gameState = GameState.SelectCards;
+
         this.nCardsToSelect = nCardsToSelect;
+        this.cardSelectionType = cardSelectionType;
         confirmButton.SetActive(true);
+
+        switch (cardSelectionType)
+        {
+            case CardSelectionType.Discard:
+                confirmButton.GetComponentInChildren<Text>().text = "DISCARD";
+                break;
+            case CardSelectionType.Retain:
+                confirmButton.GetComponentInChildren<Text>().text = "RETAIN";
+                break;
+        }
     }
 
     public void DiscardCardsWithState(CardState state)
@@ -69,11 +95,41 @@ public class CardManagerScript : MonoBehaviour
 
     public void ConfirmSelected()
     {
+        if(CountCardsWithState(CardState.InHand) + CountCardsWithState(CardState.Selected) > nCardsToSelect 
+            && CountCardsWithState(CardState.Selected) < nCardsToSelect)
+        {
+            TooltipScript.ShowTooltip("select atleast " + nCardsToSelect.ToString() + " cards", 2.5f);
+            return;
+        }
         gameState = GameState.Combat;
         this.nCardsToSelect = 0;
-        DiscardCardsWithState(CardState.Selected);
+
+        switch (cardSelectionType)
+        {
+            case CardSelectionType.Discard:
+                DiscardCardsWithState(CardState.Selected);
+                break;
+            case CardSelectionType.Retain:
+                ChangeCardsWithState(CardState.Selected, CardState.Retained);
+                hasRetained = true;
+                GameObject.FindGameObjectWithTag("EndTurnButton").GetComponent<NewTurnScript>().NewTurn();
+                break;
+        }
         confirmButton.SetActive(false);
         PlaceCards();
+    }
+    public int ChangeCardsWithState(CardState oldState, CardState newState)
+    {
+        int counter = 0;
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            var controller = allCards[i].GetComponent<cardPrefabScript>();
+            if (controller.state == oldState)
+            {
+                controller.state = newState;
+            }
+        }
+        return counter;
     }
 
     void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect, int count=1)
@@ -125,6 +181,7 @@ public class CardManagerScript : MonoBehaviour
                     card.gameObject.SetActive(true);
                     card.transform.localPosition = new Vector2(selectedLeftCoord + selectedIndex * selectedSpacing, selectedCenter.y);
                     card.transform.localScale = new Vector3(cardScale, cardScale, cardScale);
+                    card.transform.rotation = Quaternion.identity;
                     selectedIndex++;
                     controller.PutOnTop();
                     break;
@@ -134,9 +191,13 @@ public class CardManagerScript : MonoBehaviour
                 case CardState.InDiscardPile:
                     card.gameObject.SetActive(false);
                     break;
+                case CardState.Exhausted:
+                    card.gameObject.SetActive(false);
+                    break;
             }
             discardPileCountText.SetText(CountCardsWithState(CardState.InDiscardPile).ToString());
             drawPileCountText.SetText(CountCardsWithState(CardState.InDrawPile).ToString());
+            exhaustPileCountText.SetText(CountCardsWithState(CardState.Exhausted).ToString());
         }
     }
 
@@ -189,22 +250,24 @@ public class CardManagerScript : MonoBehaviour
         return true;
     }
 
+    public void ForceDrawRandomCard()
+    {
+        var drawPileNotEmpty = DrawRandomCard();
+        if (drawPileNotEmpty == false)
+        {
+            MoveDiscardedCardsToDrawPile();
+            DrawRandomCard();
+        }
+    }
+
     public void newHand()
     {
         DiscardCardsWithState(CardState.InHand);
+        ChangeCardsWithState(CardState.Retained, CardState.InHand);
         for (int i = 0; i < cardsToDraw; i++)
         {
-            var drawPileNotEmpty = DrawRandomCard();
-            if (drawPileNotEmpty == false)
-            {
-                MoveDiscardedCardsToDrawPile();
-                DrawRandomCard();
-            }
+            ForceDrawRandomCard();
         }
         PlaceCards();
-    }
-    void Update()
-    {
-
     }
 };

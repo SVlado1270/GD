@@ -9,6 +9,7 @@ TagManager:
   - CardManager
   - Character
   - Tooltip
+  - EndTurnButton
   layers:
   - Default
   - TransparentFX
