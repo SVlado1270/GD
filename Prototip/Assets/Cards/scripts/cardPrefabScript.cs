@@ -20,6 +20,11 @@ public class Effect
         cardsToDiscard = 0;
         cardsToRetain = 0;
         exhaust = false;
+        shivsToSpawn = 0;
+        replaceHandWithShivs = false;
+        shivsAtTurnStart = 0;
+        isShiv = false;
+        shivBonusDmg = 0;
     }
     public int damage;
     public int shield;
@@ -27,6 +32,11 @@ public class Effect
     public int cardsToDiscard;
     public int cardsToRetain;
     public bool exhaust;
+    public int shivsToSpawn;
+    public bool replaceHandWithShivs;
+    public int shivsAtTurnStart;
+    public bool isShiv;
+    public int shivBonusDmg;
     public TargetType targetType;
 
     public void ApplyMeta()
@@ -44,6 +54,24 @@ public class Effect
         {
             cardManager.hasRetained = false;
             cardManager.retainUpToNCards = cardsToRetain;
+        }
+        if (shivsToSpawn > 0)
+        {
+            cardManager.InstantiateShiv(shivsToSpawn);
+        }
+        if (replaceHandWithShivs)
+        {
+            int cardsInHand = cardManager.CountCardsWithState(CardState.InHand);
+            cardManager.DiscardCardsWithState(CardState.InHand);
+            cardManager.InstantiateShiv(cardsInHand);
+        }
+        if (shivsAtTurnStart > 0)
+        {
+            cardManager.shivsToDraw += shivsAtTurnStart;
+        }
+        if (shivBonusDmg > 0)
+        {
+            cardManager.shivsBonusDamage += shivBonusDmg;
         }
     }
 };

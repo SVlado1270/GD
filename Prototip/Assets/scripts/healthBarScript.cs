@@ -24,6 +24,8 @@ public class healthBarScript : MonoBehaviour
     AudioSource[] nAudio;
     AudioSource v_audio;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -129,7 +131,13 @@ public class healthBarScript : MonoBehaviour
 
     public void consumeEffect(Effect e)
     {
-        if (e.damage > 0)
+        CardManagerScript cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
+        int damage = e.damage;
+        if (e.isShiv)
+        {
+            damage += cardManager.shivsBonusDamage;
+        }
+        if (damage > 0)
         {
             // ANIMATIE PLAYER + AUDIO ATAC
             if (!isPlayer)
@@ -143,7 +151,7 @@ public class healthBarScript : MonoBehaviour
             }
         }
 
-        if (isPlayer && e.damage > 0)
+        if (isPlayer && damage > 0)
         {
             EnemyAnimator.SetBool("isAttacking", true);
 
@@ -159,7 +167,7 @@ public class healthBarScript : MonoBehaviour
             nAudio[1].PlayOneShot(nAudio[1].clip, nAudio[1].clip.length);
         }
 
-        applyDamage(e.damage);
+        applyDamage(damage);
         UpdateShield(e.shield);
         e.ApplyMeta();
     }
