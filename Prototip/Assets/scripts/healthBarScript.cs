@@ -9,11 +9,19 @@ public class healthBarScript : MonoBehaviour
     public Slider bar;
     public TextMeshProUGUI barText;
     public TextMeshProUGUI endText;
-    public TextMeshProUGUI shieldText;
-    public GameObject shieldIcon;
     public int maxHealth = 30;
     public int shield = 0;
     public int health;
+
+    public Vector3 porpsPivotPoint;
+    public int weak = 0;
+    public int retain = 0;
+    public int dexterity = 0;
+    public int strength = 0;
+    public int accuracy = 0;
+    public int blades = 0;
+    public int poison = 0;
+
     public bool isPlayer = false;
 
     float HeroHitAudioLength;
@@ -23,17 +31,64 @@ public class healthBarScript : MonoBehaviour
     Animator PlayerAnimator, EnemyAnimator;
     AudioSource[] nAudio;
     AudioSource v_audio;
-
     
 
+    public Transform getProp_UI(string propName)
+    {
+        return transform.Find("statsCanvas").Find(propName + "Prop");
+    }
+
+    public Transform getPropCountText(string propName)
+    {
+        return transform.Find("statsCanvas").Find(propName + "Prop").Find(propName + "CountText");
+    }
+
+    public Transform getPropIcon(string propName)
+    {
+        return transform.Find("statsCanvas").Find(propName + "Prop").Find(propName + "Icon");
+    }
+
     // Start is called before the first frame update
+
+    public void UpdatePropsUI()
+    {
+        var pivot = this.porpsPivotPoint;
+        var pivotDelta = new Vector3(60, 0, 0);
+
+    var props = new List<(int, string)>
+        {
+            (shield, "shield"),
+            (weak, "weak"),
+            (dexterity, "dexterity"),
+            (strength, "strength"),
+            (accuracy, "accuracy"),
+            (blades, "blades"),
+            (poison, "poison"),
+            (retain, "retain")
+        };
+
+        foreach (var pair in props)
+        {
+            var prop = getProp_UI(pair.Item2);
+            if(pair.Item1 > 0)
+            {
+                prop.gameObject.SetActive(true);
+                prop.transform.position = pivot;
+                pivot += pivotDelta;
+                getPropCountText(pair.Item2).GetComponent<TextMeshProUGUI>().SetText(pair.Item1.ToString());
+            }
+            else
+            {
+                prop.gameObject.SetActive(false);
+            }
+        }
+    }
+
     void Start()
     {
         //fetch components
         bar = transform.Find("statsCanvas").Find("Slider").GetComponent<Slider>();
         barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();
-        shieldText = transform.Find("statsCanvas").Find("shieldCountText").GetComponent<TextMeshProUGUI>();
-        shieldIcon = transform.Find("statsCanvas").Find("shieldIcon").gameObject;
 
         avatar = transform.Find("avatar").gameObject;
 
@@ -47,8 +102,11 @@ public class healthBarScript : MonoBehaviour
 
         //translate the other stats components so their placement is the same relative to the healthbar
         barText.transform.Translate(delta);
-        shieldText.transform.Translate(delta);
-        shieldIcon.transform.Translate(delta);
+
+
+        this.porpsPivotPoint = getProp_UI("shield").position + delta;
+        UpdatePropsUI();
+
 
         this.health = maxHealth;
         updateSliderValue();
@@ -126,17 +184,42 @@ public class healthBarScript : MonoBehaviour
     public void UpdateShield(int delta = 0)
     {
         shield += delta;
-        shieldText.SetText(shield.ToString());
+        getPropCountText("shield").GetComponent<TextMeshProUGUI>().SetText(shield.ToString());
+        UpdatePropsUI();
     }
 
     public void consumeEffect(Effect e)
     {
         CardManagerScript cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
         int damage = e.damage;
+
+        if (e.shivsToSpawn > 0)
+        {
+            cardManager.InstantiateShiv(e.shivsToSpawn);
+        }
+        if (e.shivsAtTurnStart > 0)
+        {
+            blades += e.shivsAtTurnStart;
+        }
+
+        if (e.cardsToRetain > 0)
+        {
+            cardManager.hasRetained = false;
+            cardManager.retainUpToNCards = e.cardsToRetain;
+            retain = e.cardsToRetain;
+        }
+
+
+        if (e.shivBonusDmg > 0)
+        {
+            accuracy += e.shivBonusDmg;
+        }
+
         if (e.isShiv)
         {
-            damage += cardManager.shivsBonusDamage;
+            damage += GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>().accuracy;
         }
+
         if (damage > 0)
         {
             // ANIMATIE PLAYER + AUDIO ATAC

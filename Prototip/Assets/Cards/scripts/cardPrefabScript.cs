@@ -50,28 +50,16 @@ public class Effect
         {
             cardManager.SelectCardsMode(cardsToDiscard, CardSelectionType.Discard);
         }
-        if (cardsToRetain > cardManager.retainUpToNCards)
+        /*if (cardsToRetain > cardManager.retainUpToNCards)
         {
             cardManager.hasRetained = false;
             cardManager.retainUpToNCards = cardsToRetain;
-        }
-        if (shivsToSpawn > 0)
-        {
-            cardManager.InstantiateShiv(shivsToSpawn);
-        }
+        }*/
         if (replaceHandWithShivs)
         {
             int cardsInHand = cardManager.CountCardsWithState(CardState.InHand);
             cardManager.DiscardCardsWithState(CardState.InHand);
             cardManager.InstantiateShiv(cardsInHand);
-        }
-        if (shivsAtTurnStart > 0)
-        {
-            cardManager.shivsToDraw += shivsAtTurnStart;
-        }
-        if (shivBonusDmg > 0)
-        {
-            cardManager.shivsBonusDamage += shivBonusDmg;
         }
     }
 };

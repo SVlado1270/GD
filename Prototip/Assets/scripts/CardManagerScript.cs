@@ -21,6 +21,7 @@ public enum CardSelectionType
 
 public class CardManagerScript : MonoBehaviour
 {
+    healthBarScript playerStats;
     public GameState gameState;
     public TextMeshProUGUI discardPileCountText;
     public TextMeshProUGUI drawPileCountText;
@@ -48,6 +49,7 @@ public class CardManagerScript : MonoBehaviour
 
     void Start()
     {
+        playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
         gameState = GameState.Combat;
         nCardsToSelect = 0;
         //some random cards for testing purposes
@@ -57,11 +59,11 @@ public class CardManagerScript : MonoBehaviour
         InstantiateCard("Draw", CardFlavour.Skill, "silent2", "Draw two cards.", 1, new Effect(TargetType.Player) { cardsToDraw = 2 },  2);
         InstantiateCard("Compromise", CardFlavour.Skill, "silent4", "Gain 8 block, discard one card.", 1, new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 }, 3);
         InstantiateCard("Retain", CardFlavour.Power, "silent7", "At the end of every turn retain up to one card. Exhaust.", 2, new Effect(TargetType.Player) { cardsToRetain = 1, exhaust = true }, 1);
-        InstantiateCard("Storm of steel", CardFlavour.Skill, "bonk2", "Discard your hand. Add 1 shiv to your hand for each card discarded.", 2, new Effect(TargetType.Player) { replaceHandWithShivs = true }, 1);
-        InstantiateCard("Blade Dance", CardFlavour.Skill, "bonk2", "Add 3 shivs into your hand", 1, new Effect(TargetType.Player) { shivsToSpawn = 3 }, 1);
-        InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "bonk2", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 });
-        InstantiateCard("Infinite Blades", CardFlavour.Power, "bonk2", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, 1);
-        InstantiateCard("Accuracy", CardFlavour.Power, "bonk2", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 });
+        InstantiateCard("Storm of steel", CardFlavour.Skill, "replaceHandWithShivs", "Discard your hand. Add 1 shiv to your hand for each card discarded.", 2, new Effect(TargetType.Player) { replaceHandWithShivs = true }, 1);
+        InstantiateCard("Blade Dance", CardFlavour.Skill, "add3shivs", "Add 3 shivs into your hand", 1, new Effect(TargetType.Player) { shivsToSpawn = 3 }, 1);
+        InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "6block", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 });
+        InstantiateCard("Infinite Blades", CardFlavour.Power, "startturn", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, 1);
+        InstantiateCard("Accuracy", CardFlavour.Power, "3dmg", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 });
 
 
         newHand();
@@ -157,7 +159,7 @@ public class CardManagerScript : MonoBehaviour
         {
             GameObject card = Instantiate(cardPrefab, this.transform.position, Quaternion.identity);
             cardPrefabScript cardController = card.GetComponent<cardPrefabScript>();
-            cardController.Init("Shiv", CardFlavour.Attack, "silent1", "Deal 4 damage. Exhaust", 0, new Effect(TargetType.Enemy) { damage = 4, exhaust=true, isShiv=true });
+            cardController.Init("Shiv", CardFlavour.Attack, "shiv", "Deal 4 damage. Exhaust", 0, new Effect(TargetType.Enemy) { damage = 4, exhaust=true, isShiv=true });
             cardController.state = CardState.InHand;
             allCards.Add(card);
         }
@@ -288,7 +290,7 @@ public class CardManagerScript : MonoBehaviour
         {
             ForceDrawRandomCard();
         }
-        InstantiateShiv(shivsToDraw);
+        InstantiateShiv(playerStats.blades);
         PlaceCards();
     }
 };

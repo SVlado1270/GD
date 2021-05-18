@@ -853,6 +853,8 @@ MonoBehaviour:
   nCardsToSelect: 0
   retainUpToNCards: 0
   hasRetained: 0
+  shivsToDraw: 0
+  shivsBonusDamage: 0
   cardSelectionType: 0
   confirmButton: {fileID: 1829921151}
 --- !u!1 &179808745
@@ -2134,6 +2136,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 6126499f6ceceb4499597016946e0405, type: 3}
   - {fileID: 21300000, guid: 1aabfb6f8fb0a8c4dbea55eb40b5e95a, type: 3}
   - {fileID: 21300000, guid: bed7304ffcb975f47a6f069ec13923c7, type: 3}
+  - {fileID: 21300000, guid: 2acf03d4a754cfa468f0ccc9e5bb7331, type: 3}
+  - {fileID: 21300000, guid: 05d8e26b109fcbc48854d776bd0d5e92, type: 3}
+  - {fileID: 21300000, guid: f9fb17566b04ef34299a8bbfb448759e, type: 3}
+  - {fileID: 21300000, guid: b72e28c583bca7f43850ad172ab2c88d, type: 3}
+  - {fileID: 21300000, guid: 2dd9f0b545c388b42913107c2ac1875f, type: 3}
+  - {fileID: 21300000, guid: e300a05ee36a6754bb5e5ba26ed91f50, type: 3}
 --- !u!4 &849282093
 Transform:
   m_ObjectHideFlags: 0
@@ -3256,11 +3264,17 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  shieldText: {fileID: 0}
-  shieldIcon: {fileID: 0}
   maxHealth: 30
   shield: 0
   health: 30
+  porpsPivotPoint: {x: 0, y: 0, z: 0}
+  weak: 0
+  retain: 0
+  dexterity: 0
+  strength: 0
+  accuracy: 0
+  blades: 0
+  poison: 0
   isPlayer: 1
   avatar: {fileID: 0}
   corpseAvatar: {fileID: 64900054}
@@ -3978,12 +3992,32 @@ PrefabInstance:
     - target: {fileID: 4049669794671423378, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 261
+      value: 184.6
       objectReference: {fileID: 0}
     - target: {fileID: 4049669794671423378, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 109
+      value: 112.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049669794671423378, guid: e775662bd605f5446bb8231e6b449189,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 45.210518
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049669794671423378, guid: e775662bd605f5446bb8231e6b449189,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 35.616993
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049669794671423379, guid: e775662bd605f5446bb8231e6b449189,
+        type: 3}
+      propertyPath: m_text
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4049669794671423379, guid: e775662bd605f5446bb8231e6b449189,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e775662bd605f5446bb8231e6b449189, type: 3}
@@ -4374,11 +4408,17 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  shieldText: {fileID: 0}
-  shieldIcon: {fileID: 0}
   maxHealth: 50
   shield: 0
   health: 30
+  porpsPivotPoint: {x: 0, y: 0, z: 0}
+  weak: 0
+  retain: 0
+  dexterity: 0
+  strength: 0
+  accuracy: 0
+  blades: 0
+  poison: 0
   isPlayer: 0
   avatar: {fileID: 0}
   corpseAvatar: {fileID: 0}
