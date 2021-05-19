@@ -21,7 +21,7 @@ public enum CardSelectionType
 
 public class CardManagerScript : MonoBehaviour
 {
-    healthBarScript playerStats;
+    public healthBarScript playerStats;
     public GameState gameState;
     public TextMeshProUGUI discardPileCountText;
     public TextMeshProUGUI drawPileCountText;
@@ -64,8 +64,14 @@ public class CardManagerScript : MonoBehaviour
         InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "6block", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 });
         InstantiateCard("Infinite Blades", CardFlavour.Power, "startturn", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, 1);
         InstantiateCard("Accuracy", CardFlavour.Power, "3dmg", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 });
-        InstantiateCard("Foot work", CardFlavour.Power, "bonk2", "Gain 2 dexterity. Dexterity increases shield gained from cards.", 2, new Effect(TargetType.Player) { dexterity = 2 }, 5);
+        InstantiateCard("Foot work", CardFlavour.Power, "footwork", "Gain 2 dexterity. Dexterity increases shield gained from cards.", 2, new Effect(TargetType.Player) { dexterity = 2 }, 1);
+        InstantiateCard("Neutralize", CardFlavour.Attack, "neutralize", "Deal 3 damage. Apply 1 weak.", 0, new Effect(TargetType.Enemy) { damage = 3, weak = 1 }, 1);
+        InstantiateCard("Rage", CardFlavour.Power, "art1", "Gain 3 strength. Lose 3 dexterity.", 2, new Effect(TargetType.Player) { strength = 3, dexterity = -3}, 1);
+        InstantiateCard("Sabotage", CardFlavour.Power, "losestrength", "Enemy loses 2 strength", 1, new Effect(TargetType.Enemy) { strength = -2 }, 1);
+        InstantiateCard("Wraith Form", CardFlavour.Power, "bonk2", "Gain 2 Intangible. Lose 1 dexterity every turn.", 3, new Effect(TargetType.Player) { intangible = 2, wraith = 1 }, 1);
 
+
+        //weak losestrength art1 poison2 poison footwork
 
         newHand();
         PlaceCards();

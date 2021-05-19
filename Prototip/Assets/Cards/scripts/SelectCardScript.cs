@@ -95,7 +95,7 @@ public class SelectCardScript : MonoBehaviour
                 TooltipScript.ShowTooltip("forbidden action", 1f);
                 return;
             }
-            receiver.consumeEffect(controller.effect);
+            receiver.consumeEffect(controller.effect, cardManager.playerStats);
             controller.state = CardState.InDiscardPile;
             energyManager.consumeCard(controller);
             if (controller.effect.exhaust)

@@ -10,6 +10,7 @@ TagManager:
   - Character
   - Tooltip
   - EndTurnButton
+  - Enemy
   layers:
   - Default
   - TransparentFX

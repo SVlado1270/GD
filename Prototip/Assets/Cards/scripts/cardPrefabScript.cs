@@ -26,6 +26,11 @@ public class Effect
         isShiv = false;
         shivBonusDmg = 0;
         dexterity = 0;
+        weak = 0;
+        strength = 0;
+        poison = 0;
+        intangible = 0;
+        wraith = 0;
     }
     public int damage;
     public int shield;
@@ -39,6 +44,11 @@ public class Effect
     public bool isShiv;
     public int shivBonusDmg;
     public int dexterity;
+    public int weak;
+    public int strength;
+    public int poison;
+    public int intangible;
+    public int wraith;
     public TargetType targetType;
 
     public void ApplyMeta()

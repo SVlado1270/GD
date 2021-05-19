@@ -14,13 +14,15 @@ public class healthBarScript : MonoBehaviour
     public int health;
 
     public Vector3 porpsPivotPoint;
-    public int weak = 1;
-    public int retain = 1;
-    public int dexterity = 1;
-    public int strength = 1;
-    public int accuracy = 1;
-    public int blades = 1;
-    public int poison = 1;
+    public int weak = 0;
+    public int retain = 0;
+    public int dexterity = 0;
+    public int strength = 0;
+    public int accuracy = 0;
+    public int blades = 0;
+    public int poison = 0;
+    public int intagible = 0;
+    public int wraith = 0;
 
     public bool isPlayer = false;
 
@@ -64,13 +66,15 @@ public class healthBarScript : MonoBehaviour
             (accuracy, "accuracy"),
             (blades, "blades"),
             (poison, "poison"),
-            (retain, "retain")
+            (retain, "retain"),
+            (intagible, "intangible"),
+            (wraith, "wraith")
         };
 
         foreach (var pair in props)
         {
             var prop = getProp_UI(pair.Item2);
-            if(pair.Item1 > 0)
+            if(pair.Item1 != 0)
             {
                 prop.gameObject.SetActive(true);
                 prop.transform.position = pivot;
@@ -182,7 +186,15 @@ public class healthBarScript : MonoBehaviour
         }
     }
 
-    public void consumeEffect(Effect e)
+    public void turnReset()
+    {
+        if (wraith > 0)
+        {
+            dexterity -= wraith;
+        }
+        shield = 0;
+    }
+    public void consumeEffect(Effect e, healthBarScript sender)
     {
         CardManagerScript cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
         int damage = e.damage;
@@ -215,8 +227,15 @@ public class healthBarScript : MonoBehaviour
         }
 
         dexterity += e.dexterity;
+        intagible += e.intangible;
+        wraith += e.wraith;
 
         
+        if (intagible > 0 && damage > 1)
+        {
+            damage = 1;
+            intagible -= 1;
+        }
 
         if (damage > 0)
         {
@@ -242,11 +261,36 @@ public class healthBarScript : MonoBehaviour
             EnemyAnimator.SetBool("isAttacking", false);
         }
 
+        
+
         //AUDIO SHIELD
         if (e.shield > 0)
         {
             
             nAudio[1].PlayOneShot(nAudio[1].clip, nAudio[1].clip.length);
+        }
+
+        strength += e.strength;
+
+        if(damage > 0)
+        {
+            damage += sender.strength;
+            if (damage < 0)
+            {
+                damage = 0;
+            }
+        }
+        
+
+        if (e.weak > 0)
+        {
+            weak += e.weak;
+        }
+        if( sender.weak > 0)
+        {
+            sender.weak -= 1;
+            damage = (int)(damage * 0.75);
+            sender.UpdatePropsUI();
         }
 
         applyDamage(damage);

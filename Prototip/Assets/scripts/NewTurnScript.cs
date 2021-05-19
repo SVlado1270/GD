@@ -9,6 +9,7 @@ public class NewTurnScript : MonoBehaviour
     energyManagerScript energyManager;
     CardManagerScript cardManager;
     healthBarScript playerStats;
+    healthBarScript enemyStats;
 
 
     //temporary intent ui fix 
@@ -32,6 +33,7 @@ public class NewTurnScript : MonoBehaviour
         energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
         cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
         playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
+        enemyStats = GameObject.FindGameObjectWithTag("Enemy").GetComponent<healthBarScript>();
 
         //temporary placement for ui intent
         //TODO: remove this
@@ -72,8 +74,8 @@ public class NewTurnScript : MonoBehaviour
 
     public void EnemyTurn()
     {
-        playerStats.consumeEffect(new Effect(TargetType.Player) { damage = enemyDamage });
-        playerStats.shield = 0;
+        playerStats.consumeEffect(new Effect(TargetType.Player) { damage = enemyDamage }, enemyStats);
+        playerStats.turnReset();
         playerStats.UpdatePropsUI();
         ChooseAnotherActionForEnemy();
     }
