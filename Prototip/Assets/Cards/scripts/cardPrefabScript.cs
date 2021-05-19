@@ -25,6 +25,7 @@ public class Effect
         shivsAtTurnStart = 0;
         isShiv = false;
         shivBonusDmg = 0;
+        dexterity = 0;
     }
     public int damage;
     public int shield;
@@ -37,6 +38,7 @@ public class Effect
     public int shivsAtTurnStart;
     public bool isShiv;
     public int shivBonusDmg;
+    public int dexterity;
     public TargetType targetType;
 
     public void ApplyMeta()
@@ -50,11 +52,6 @@ public class Effect
         {
             cardManager.SelectCardsMode(cardsToDiscard, CardSelectionType.Discard);
         }
-        /*if (cardsToRetain > cardManager.retainUpToNCards)
-        {
-            cardManager.hasRetained = false;
-            cardManager.retainUpToNCards = cardsToRetain;
-        }*/
         if (replaceHandWithShivs)
         {
             int cardsInHand = cardManager.CountCardsWithState(CardState.InHand);

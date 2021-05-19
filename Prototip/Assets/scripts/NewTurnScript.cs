@@ -66,14 +66,15 @@ public class NewTurnScript : MonoBehaviour
     {
         energyManager.ResetEnergy();
         cardManager.newHand();
-        playerStats.UpdateShield();
+
+        playerStats.UpdatePropsUI();
     }
 
     public void EnemyTurn()
     {
         playerStats.consumeEffect(new Effect(TargetType.Player) { damage = enemyDamage });
         playerStats.shield = 0;
-        playerStats.UpdateShield();
+        playerStats.UpdatePropsUI();
         ChooseAnotherActionForEnemy();
     }
 }

@@ -64,6 +64,7 @@ public class CardManagerScript : MonoBehaviour
         InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "6block", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 });
         InstantiateCard("Infinite Blades", CardFlavour.Power, "startturn", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, 1);
         InstantiateCard("Accuracy", CardFlavour.Power, "3dmg", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 });
+        InstantiateCard("Foot work", CardFlavour.Power, "bonk2", "Gain 2 dexterity. Dexterity increases shield gained from cards.", 2, new Effect(TargetType.Player) { dexterity = 2 }, 5);
 
 
         newHand();

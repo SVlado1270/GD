@@ -14,13 +14,13 @@ public class healthBarScript : MonoBehaviour
     public int health;
 
     public Vector3 porpsPivotPoint;
-    public int weak = 0;
-    public int retain = 0;
-    public int dexterity = 0;
-    public int strength = 0;
-    public int accuracy = 0;
-    public int blades = 0;
-    public int poison = 0;
+    public int weak = 1;
+    public int retain = 1;
+    public int dexterity = 1;
+    public int strength = 1;
+    public int accuracy = 1;
+    public int blades = 1;
+    public int poison = 1;
 
     public bool isPlayer = false;
 
@@ -110,7 +110,6 @@ public class healthBarScript : MonoBehaviour
 
         this.health = maxHealth;
         updateSliderValue();
-        UpdateShield();
 
 
         PlayerAnimator = GameObject.Find("Character/Hero/Silent/avatar").GetComponent<Animator>();
@@ -157,7 +156,7 @@ public class healthBarScript : MonoBehaviour
             health -= damage;
         }
         updateSliderValue();
-        UpdateShield();
+        UpdatePropsUI();
 
         if (health <= 0)
         {
@@ -175,17 +174,12 @@ public class healthBarScript : MonoBehaviour
                 endText.SetText("You win!");
             }
             
+
+
             transform.Find("statsCanvas").gameObject.SetActive(false);
             GameObject.FindGameObjectWithTag("EndTurnButton").SetActive(false);
             GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>().gameState = GameState.GameOver;
         }
-    }
-
-    public void UpdateShield(int delta = 0)
-    {
-        shield += delta;
-        getPropCountText("shield").GetComponent<TextMeshProUGUI>().SetText(shield.ToString());
-        UpdatePropsUI();
     }
 
     public void consumeEffect(Effect e)
@@ -220,6 +214,10 @@ public class healthBarScript : MonoBehaviour
             damage += GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>().accuracy;
         }
 
+        dexterity += e.dexterity;
+
+        
+
         if (damage > 0)
         {
             // ANIMATIE PLAYER + AUDIO ATAC
@@ -247,12 +245,23 @@ public class healthBarScript : MonoBehaviour
         //AUDIO SHIELD
         if (e.shield > 0)
         {
+            
             nAudio[1].PlayOneShot(nAudio[1].clip, nAudio[1].clip.length);
         }
 
         applyDamage(damage);
-        UpdateShield(e.shield);
+
+        if(e.shield > 0)
+        {
+            int delta_shield = e.shield + dexterity;
+            if (delta_shield > 0)
+            {
+                shield += delta_shield;
+            }
+        }
         e.ApplyMeta();
+
+        UpdatePropsUI();
     }
 
 

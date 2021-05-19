@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: 'accuracy: Shivs deal X additional damage.'
 --- !u!1 &406988895875462491
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,7 +638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: ' '
+  message: ' weak: attacks deal X less damage'
 --- !u!1 &3291178264044289519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1024,7 +1024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: 'dexterity: increases block gained from cards by X '
 --- !u!1 &3992315756195628307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,7 +1218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: Block damage
 --- !u!1 &4049669793546504909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1910,7 +1910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: 'strength: increases attack damage by X (per hit)'
 --- !u!1 &4597368485146206523
 GameObject:
   m_ObjectHideFlags: 0
@@ -1998,7 +1998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: 'blades: At the start of your turn, add X Shivs into your hand.'
 --- !u!1 &6005360820642789529
 GameObject:
   m_ObjectHideFlags: 0
@@ -2384,7 +2384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: 'retain: at the end of the turn retain up to X cards'
 --- !u!1 &7816955506188050923
 GameObject:
   m_ObjectHideFlags: 0
@@ -2504,7 +2504,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9042c4094c08f2d49b928f9c0b27e545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  message: Block
+  message: 'poison:  At the beginning of its turn, the target loses X HP and 1 stack
+    of poison.'
 --- !u!1 &8360245436247830409
 GameObject:
   m_ObjectHideFlags: 0
