@@ -23,13 +23,16 @@ public class healthBarScript : MonoBehaviour
     public int poison = 0;
     public int intagible = 0;
     public int wraith = 0;
+    public int ritual = 0;
 
     public bool isPlayer = false;
 
     float HeroHitAudioLength;
 
     public GameObject avatar;
-    public GameObject corpseAvatar; 
+    public GameObject corpseAvatar;
+    public GameObject intent;
+
     Animator PlayerAnimator, EnemyAnimator;
     AudioSource[] nAudio;
     AudioSource v_audio;
@@ -52,12 +55,27 @@ public class healthBarScript : MonoBehaviour
 
     // Start is called before the first frame update
 
+    public void UpdateIntent(string spriteName, int counter, string hover_text)
+    {
+        if (isPlayer == false)
+        {
+            intent.SetActive(true);
+            SpriteManagerScript SPRITES = GameObject.FindGameObjectWithTag("SpriteManager").GetComponent<SpriteManagerScript>();
+
+            intent.transform.Find("icon").GetComponent<Image>().sprite = SPRITES.GetSpriteByName(spriteName);
+            intent.transform.Find("icon").GetComponent<StaticTooltip>().message = hover_text;
+            Debug.Log(intent.transform.Find("icon").GetComponent<Image>().sprite.name);
+
+            intent.transform.Find("count").GetComponent<TextMeshProUGUI>().SetText(counter.ToString());
+        }
+    }
+
     public void UpdatePropsUI()
     {
         var pivot = this.porpsPivotPoint;
         var pivotDelta = new Vector3(60, 0, 0);
 
-    var props = new List<(int, string)>
+        var props = new List<(int, string)>
         {
             (shield, "shield"),
             (weak, "weak"),
@@ -68,7 +86,8 @@ public class healthBarScript : MonoBehaviour
             (poison, "poison"),
             (retain, "retain"),
             (intagible, "intangible"),
-            (wraith, "wraith")
+            (wraith, "wraith"),
+            (ritual, "ritual")
         };
 
         foreach (var pair in props)
@@ -86,6 +105,7 @@ public class healthBarScript : MonoBehaviour
                 prop.gameObject.SetActive(false);
             }
         }
+
     }
 
     void Start()
@@ -95,7 +115,7 @@ public class healthBarScript : MonoBehaviour
         barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();
 
         avatar = transform.Find("avatar").gameObject;
-
+        intent = transform.Find("statsCanvas").Find("intent").gameObject;
         endText = GameObject.Find("infoUI/Canvas/EndGame").GetComponent<TextMeshProUGUI>();
 
         //put health bar above character 
@@ -139,20 +159,26 @@ public class healthBarScript : MonoBehaviour
         barText.SetText("{0}/{1}", health, maxHealth);
     }
 
-    public void applyDamage(int damage)
+    public void applyDamage(int damage, bool ignoreShield=false)
     {
-
-        if (shield > 0)
+        if(ignoreShield == false)
         {
-            if (shield > damage)
+            if (shield > 0)
             {
-                shield -= damage;
+                if (shield > damage)
+                {
+                    shield -= damage;
+                }
+                else
+                {
+                    damage -= shield;
+                    health -= damage;
+                    shield = 0;
+                }
             }
             else
             {
-                damage -= shield;
                 health -= damage;
-                shield = 0;
             }
         }
         else
@@ -186,19 +212,41 @@ public class healthBarScript : MonoBehaviour
         }
     }
 
-    public void turnReset()
+    public void startTurnEffects()
     {
         if (wraith > 0)
         {
             dexterity -= wraith;
         }
         shield = 0;
+        if (poison > 0)
+        {
+            applyDamage(poison, true); //ignores shield
+            poison -= 1;
+            updateSliderValue();
+        }
+    }
+
+    public void endTurnEffects()
+    {
+        if (ritual > 0)
+        {
+            strength += ritual;
+        }
     }
     public void consumeEffect(Effect e, healthBarScript sender)
     {
         CardManagerScript cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
         int damage = e.damage;
 
+        if(e.ritual > 0)
+        {
+            ritual += e.ritual;
+        }
+        if (e.poison > 0)
+        {
+            poison += e.poison;
+        }
         if (e.shivsToSpawn > 0)
         {
             cardManager.InstantiateShiv(e.shivsToSpawn);

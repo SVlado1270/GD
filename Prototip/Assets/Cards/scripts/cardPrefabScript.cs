@@ -31,6 +31,7 @@ public class Effect
         poison = 0;
         intangible = 0;
         wraith = 0;
+        ritual = 0;
     }
     public int damage;
     public int shield;
@@ -49,6 +50,7 @@ public class Effect
     public int poison;
     public int intangible;
     public int wraith;
+    public int ritual;
     public TargetType targetType;
 
     public void ApplyMeta()

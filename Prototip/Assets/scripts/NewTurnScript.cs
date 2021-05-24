@@ -14,13 +14,26 @@ public class NewTurnScript : MonoBehaviour
 
     //temporary intent ui fix 
     public GameObject intentUI;
-    int enemyDamage;
+    Effect enemyEffect;
+    int currentTurnIndex = 0;
 
     public void ChooseAnotherActionForEnemy()
     {
-        enemyDamage = Random.Range(4, 15);
-        intentUI.transform.Find("text").GetComponent<TextMeshProUGUI>().SetText(enemyDamage.ToString());
-        intentUI.GetComponent<StaticTooltip>().message = "This enemy intends to attack for " + enemyDamage.ToString() + " damage.";
+        if(currentTurnIndex == 0)
+        {
+            int ritual = 3;
+            string hover_text = "This enemy intends to use a Buff.";
+            enemyStats.UpdateIntent("buff_intent", ritual, hover_text);
+            enemyEffect = new Effect(TargetType.Enemy) { ritual = ritual };
+        }
+        else
+        {
+            int enemyDamage = 6;
+            string hover_text = "This enemy intends to attack for " + enemyDamage.ToString() + " damage.";
+            enemyStats.UpdateIntent("attack_intent", enemyDamage, hover_text);
+            enemyEffect = new Effect(TargetType.Player) { damage = enemyDamage };
+        }
+        currentTurnIndex++;
     }
 
     //
@@ -29,15 +42,15 @@ public class NewTurnScript : MonoBehaviour
 
     private void Start()
     {
-        ChooseAnotherActionForEnemy();
+        currentTurnIndex = 0;
         energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
         cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
         playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
         enemyStats = GameObject.FindGameObjectWithTag("Enemy").GetComponent<healthBarScript>();
+        ChooseAnotherActionForEnemy();
 
         //temporary placement for ui intent
         //TODO: remove this
-        intentUI.transform.position = Camera.main.WorldToScreenPoint(GameObject.Find("Character/Villains/cultist/avatar").transform.position + new Vector3(0f, 5f));
     }
 
     public void OnButtonPress()
@@ -66,17 +79,38 @@ public class NewTurnScript : MonoBehaviour
 
     public void PlayerNewTurn()
     {
+        playerStats.startTurnEffects(); 
         energyManager.ResetEnergy();
+        
         cardManager.newHand();
-
+        
         playerStats.UpdatePropsUI();
+        enemyStats.UpdatePropsUI();
+
+        playerStats.endTurnEffects();
     }
 
     public void EnemyTurn()
     {
-        playerStats.consumeEffect(new Effect(TargetType.Player) { damage = enemyDamage }, enemyStats);
-        playerStats.turnReset();
-        playerStats.UpdatePropsUI();
+        enemyStats.startTurnEffects(); //reset previous block
+
+
+        //act acoording to last choice
+        if (enemyEffect.targetType == TargetType.Player)
+        {
+            playerStats.consumeEffect(enemyEffect, enemyStats);
+        }
+        else
+        {
+            enemyStats.consumeEffect(enemyEffect, enemyStats);
+        }
+
+        //choose action for next turn
         ChooseAnotherActionForEnemy();
+
+
+        enemyStats.endTurnEffects();
+        playerStats.UpdatePropsUI();
+        enemyStats.UpdatePropsUI();
     }
 }

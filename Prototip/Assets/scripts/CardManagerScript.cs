@@ -69,6 +69,8 @@ public class CardManagerScript : MonoBehaviour
         InstantiateCard("Rage", CardFlavour.Power, "art1", "Gain 3 strength. Lose 3 dexterity.", 2, new Effect(TargetType.Player) { strength = 3, dexterity = -3}, 1);
         InstantiateCard("Sabotage", CardFlavour.Power, "losestrength", "Enemy loses 2 strength", 1, new Effect(TargetType.Enemy) { strength = -2 }, 1);
         InstantiateCard("Wraith Form", CardFlavour.Power, "bonk2", "Gain 2 Intangible. Lose 1 dexterity every turn.", 3, new Effect(TargetType.Player) { intangible = 2, wraith = 1 }, 1);
+        InstantiateCard("Poisoned stab", CardFlavour.Attack, "poison", "Deal 5 damage, apply 3 poison", 1, new Effect(TargetType.Enemy) { poison = 3, damage = 5}, 5);
+        InstantiateCard("Deadly poison", CardFlavour.Attack, "poison2", "Apply 5 poison", 1, new Effect(TargetType.Enemy) { poison = 5 }, 5);
 
 
         //weak losestrength art1 poison2 poison footwork
