@@ -9,13 +9,20 @@ public class NewTurnScript : MonoBehaviour
     energyManagerScript energyManager;
     CardManagerScript cardManager;
     healthBarScript playerStats;
+
+    public GameObject[] enemies;
+    int currentEnemyIndex;
     healthBarScript enemyStats;
 
 
-    //temporary intent ui fix 
-    public GameObject intentUI;
+
     Effect enemyEffect;
     int currentTurnIndex = 0;
+
+    public static void onKill()
+    {
+        Debug.Log("kill happened");
+    }
 
     public void ChooseAnotherActionForEnemy()
     {
@@ -42,21 +49,43 @@ public class NewTurnScript : MonoBehaviour
 
     private void Start()
     {
-        currentTurnIndex = 0;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject e in enemies)
+        {
+            e.SetActive(false);
+        }
+
+
+
         energyManager = GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>();
         cardManager = GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>();
         playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
-        enemyStats = GameObject.FindGameObjectWithTag("Enemy").GetComponent<healthBarScript>();
-        ChooseAnotherActionForEnemy();
 
-        //temporary placement for ui intent
-        //TODO: remove this
+
+        currentEnemyIndex = -1;
+        NextLevel();
     }
 
     public void OnButtonPress()
     {
         NewTurn();
     }
+
+    public bool checkForKill()
+    {
+        if (enemyStats.isDead())
+        {
+            NextLevel();
+            return true;
+        }
+        else if (playerStats.isDead())
+        {
+            cardManager.gameState = GameState.GameOver;
+            return true;
+        }
+        return false;
+    }
+
     public void NewTurn()
     {
         if (cardManager.hasRetained == false && cardManager.retainUpToNCards > 0)
@@ -70,10 +99,13 @@ public class NewTurnScript : MonoBehaviour
             TooltipScript.ShowTooltip("Finish card selection first", 3f);
             return;
         }
-
         
+
+
+
         EnemyTurn();
         PlayerNewTurn();
+
         cardManager.hasRetained = false;
     }
 
@@ -92,9 +124,17 @@ public class NewTurnScript : MonoBehaviour
 
     public void EnemyTurn()
     {
+        if (checkForKill())
+        {
+            return;
+        }
         enemyStats.startTurnEffects(); //reset previous block
 
 
+        if (checkForKill())
+        {
+            return;
+        }
         //act acoording to last choice
         if (enemyEffect.targetType == TargetType.Player)
         {
@@ -104,13 +144,46 @@ public class NewTurnScript : MonoBehaviour
         {
             enemyStats.consumeEffect(enemyEffect, enemyStats);
         }
+        if(checkForKill())
+        {
+            return;
+        }
+
 
         //choose action for next turn
+        if (checkForKill())
+        {
+            return;
+        }
         ChooseAnotherActionForEnemy();
 
-
         enemyStats.endTurnEffects();
+        if (checkForKill())
+        {
+            return;
+        }
+
         playerStats.UpdatePropsUI();
         enemyStats.UpdatePropsUI();
+    }
+
+    public void NextLevel()
+    {
+        currentTurnIndex = 0;
+        if(currentEnemyIndex >= 0)
+        {
+            enemies[currentEnemyIndex].SetActive(false);
+        }
+        if(currentEnemyIndex + 1 < enemies.Length)
+        {
+            currentEnemyIndex++;
+            enemies[currentEnemyIndex].SetActive(true);
+            enemyStats = enemies[currentEnemyIndex].GetComponent<healthBarScript>();
+            ChooseAnotherActionForEnemy();
+        }
+        else
+        {
+            print("GAMEOVER");
+        }
     }
 }

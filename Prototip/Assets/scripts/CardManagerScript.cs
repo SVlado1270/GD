@@ -54,7 +54,7 @@ public class CardManagerScript : MonoBehaviour
         nCardsToSelect = 0;
         //some random cards for testing purposes
         //params:       title,          flavour,            sprite,     description,        energy, effect,                                         count
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "Deal 6 damage.",   1,      new Effect(TargetType.Enemy) {damage = 6},       6);
+        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "Deal 6 damage.",   1,      new Effect(TargetType.Enemy) {damage = 6},       122);
         InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "Gain 5 block.",     1,      new Effect(TargetType.Player) {shield = 5},      6);
         InstantiateCard("Draw", CardFlavour.Skill, "silent2", "Draw two cards.", 1, new Effect(TargetType.Player) { cardsToDraw = 2 },  2);
         InstantiateCard("Compromise", CardFlavour.Skill, "silent4", "Gain 8 block, discard one card.", 1, new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 }, 3);

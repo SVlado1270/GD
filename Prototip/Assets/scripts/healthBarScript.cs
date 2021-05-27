@@ -31,7 +31,7 @@ public class healthBarScript : MonoBehaviour
 
     public GameObject avatar;
     public GameObject corpseAvatar;
-    public GameObject intent;
+    GameObject intent;
 
     Animator PlayerAnimator, EnemyAnimator;
     AudioSource[] nAudio;
@@ -64,10 +64,14 @@ public class healthBarScript : MonoBehaviour
 
             intent.transform.Find("icon").GetComponent<Image>().sprite = SPRITES.GetSpriteByName(spriteName);
             intent.transform.Find("icon").GetComponent<StaticTooltip>().message = hover_text;
-            Debug.Log(intent.transform.Find("icon").GetComponent<Image>().sprite.name);
 
             intent.transform.Find("count").GetComponent<TextMeshProUGUI>().SetText(counter.ToString());
         }
+    }
+
+    public bool isDead()
+    {
+        return health <= 0;
     }
 
     public void UpdatePropsUI()
@@ -110,6 +114,7 @@ public class healthBarScript : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("START WAS CALLED");
         //fetch components
         bar = transform.Find("statsCanvas").Find("Slider").GetComponent<Slider>();
         barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();
@@ -190,25 +195,12 @@ public class healthBarScript : MonoBehaviour
 
         if (health <= 0)
         {
-            endText.gameObject.SetActive(true);
-
+            NewTurnScript.onKill();
             if (isPlayer)
             {
                 corpseAvatar.SetActive(true);
                 avatar.SetActive(false);
-                endText.SetText("Game over!");
             }
-            else
-            {
-                avatar.SetActive(false);
-                endText.SetText("You win!");
-            }
-            
-
-
-            transform.Find("statsCanvas").gameObject.SetActive(false);
-            GameObject.FindGameObjectWithTag("EndTurnButton").SetActive(false);
-            GameObject.FindGameObjectWithTag("CardManager").GetComponent<CardManagerScript>().gameState = GameState.GameOver;
         }
     }
 
