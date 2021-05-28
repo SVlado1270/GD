@@ -26,19 +26,50 @@ public class NewTurnScript : MonoBehaviour
 
     public void ChooseAnotherActionForEnemy()
     {
-        if(currentTurnIndex == 0)
+        switch(enemyStats.name)
         {
-            int ritual = 3;
-            string hover_text = "This enemy intends to use a Buff.";
-            enemyStats.UpdateIntent("buff_intent", ritual, hover_text);
-            enemyEffect = new Effect(TargetType.Enemy) { ritual = ritual };
-        }
-        else
-        {
-            int enemyDamage = 6;
-            string hover_text = "This enemy intends to attack for " + enemyDamage.ToString() + " damage.";
-            enemyStats.UpdateIntent("attack_intent", enemyDamage, hover_text);
-            enemyEffect = new Effect(TargetType.Player) { damage = enemyDamage };
+            case "cultist":
+                if (currentTurnIndex == 0)
+                {
+                    int ritual = 3;
+                    string hover_text = "This enemy intends to use a Buff.";
+                    enemyStats.UpdateIntent("buff_intent", ritual, hover_text);
+                    enemyEffect = new Effect(TargetType.Enemy) { ritual = ritual };
+                }
+                else
+                {
+                    int cultistDamage = 6;
+                    string hover_text = "This enemy intends to attack for " + cultistDamage.ToString() + " damage.";
+                    enemyStats.UpdateIntent("attack_intent", cultistDamage, hover_text);
+                    enemyEffect = new Effect(TargetType.Player) { damage = cultistDamage };
+                }
+                break;
+            case "slaver":
+                int slaverDamage;
+                if (currentTurnIndex % 2 == 0)
+                {
+                    slaverDamage = Random.Range(4, 11);
+                }
+                else
+                {
+                    slaverDamage = Random.Range(12, 15);
+                }
+                string slaverHoverText = "This enemy intends to attack for " + slaverDamage.ToString() + " damage.";
+                enemyStats.UpdateIntent("attack_intent", slaverDamage, slaverHoverText);
+                enemyEffect = new Effect(TargetType.Player) { damage = slaverDamage };
+                break;
+            case "mantisLord":
+                break;
+            case "fungi":
+                break;
+            case "umu":
+                break;
+            case "radiance":
+                break;
+            case "corruptHeart":
+                break;
+            case "collector":
+                break;
         }
         currentTurnIndex++;
     }
@@ -135,6 +166,7 @@ public class NewTurnScript : MonoBehaviour
         playerStats.resetStats();
         energyManager.ResetEnergy();
 
+        cardManager.ChangeCardsWithState(CardState.InDiscardPile, CardState.InDrawPile);
         cardManager.newHand();
         playerStats.UpdatePropsUI();
         enemyStats.UpdatePropsUI();
@@ -200,5 +232,6 @@ public class NewTurnScript : MonoBehaviour
         {
             print("GAMEOVER");
         }
+        print(enemyStats.name);
     }
 }

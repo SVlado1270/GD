@@ -56,27 +56,24 @@ public class CardManagerScript : MonoBehaviour
         nCardsToSelect = 0;
         hasUnlocked = true;
         //some random cards for testing purposes
-        //params:       title,          flavour,            sprite,     description,        energy, effect,              state,                           count
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "Deal 6 damage.",   1,      new Effect(TargetType.Enemy) {damage = 6},   CardState.Locked,    12);
-        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "Gain 5 block.",     1,      new Effect(TargetType.Player) {shield = 5}, CardState.Locked, 6);
-        InstantiateCard("Draw", CardFlavour.Skill, "silent2", "Draw two cards.", 1, new Effect(TargetType.Player) { cardsToDraw = 2 }, CardState.Locked, 2);
-        InstantiateCard("Compromise", CardFlavour.Skill, "silent4", "Gain 8 block, discard one card.", 1, new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 }, CardState.Locked, 3);
-        InstantiateCard("Retain", CardFlavour.Power, "silent7", "At the end of every turn retain up to one card. Exhaust.", 2, new Effect(TargetType.Player) { cardsToRetain = 1, exhaust = true }, CardState.Locked, 3);
-        InstantiateCard("Storm of steel", CardFlavour.Skill, "replaceHandWithShivs", "Discard your hand. Add 1 shiv to your hand for each card discarded.", 2, new Effect(TargetType.Player) { replaceHandWithShivs = true }, CardState.InDrawPile, 1);
-        InstantiateCard("Blade Dance", CardFlavour.Skill, "add3shivs", "Add 3 shivs into your hand", 1, new Effect(TargetType.Player) { shivsToSpawn = 3 }, CardState.Locked, 1);
-        InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "6block", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 }, CardState.Locked, 1);
-        InstantiateCard("Infinite Blades", CardFlavour.Power, "startturn", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, CardState.Locked, 1);
-        InstantiateCard("Accuracy", CardFlavour.Power, "3dmg", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 }, CardState.InDrawPile, 1);
-        InstantiateCard("Foot work", CardFlavour.Power, "footwork", "Gain 2 dexterity. Dexterity increases shield gained from cards.", 2, new Effect(TargetType.Player) { dexterity = 2 }, CardState.InDrawPile, 1);
-        InstantiateCard("Neutralize", CardFlavour.Attack, "neutralize", "Deal 3 damage. Apply 1 weak.", 0, new Effect(TargetType.Enemy) { damage = 3, weak = 1 }, CardState.InDrawPile, 1);
-        InstantiateCard("Rage", CardFlavour.Power, "art1", "Gain 3 strength. Lose 3 dexterity.", 2, new Effect(TargetType.Player) { strength = 3, dexterity = -3}, CardState.InDrawPile, 1);
-        InstantiateCard("Sabotage", CardFlavour.Power, "losestrength", "Enemy loses 2 strength", 1, new Effect(TargetType.Enemy) { strength = -2 }, CardState.InDrawPile, 1);
-        InstantiateCard("Wraith Form", CardFlavour.Power, "bonk2", "Gain 2 Intangible. Lose 1 dexterity every turn.", 3, new Effect(TargetType.Player) { intangible = 2, wraith = 1 }, CardState.InDrawPile, 1);
-        InstantiateCard("Poisoned stab", CardFlavour.Attack, "poison", "Deal 5 damage, apply 3 poison", 1, new Effect(TargetType.Enemy) { poison = 3, damage = 5}, CardState.InDrawPile, 3);
-        InstantiateCard("Deadly poison", CardFlavour.Attack, "poison2", "Apply 5 poison", 1, new Effect(TargetType.Enemy) { poison = 5 }, CardState.InDrawPile, 5);
-
-
-        //weak losestrength art1 poison2 poison footwork
+        //params:       title,              flavour,            sprite,                 description,                                                            energy, effect,                                                              state,                  count
+        InstantiateCard("Strike",           CardFlavour.Attack, "silent1",              "Deal 6 damage.",                                                       1,      new Effect(TargetType.Enemy) {damage = 6},                           CardState.InDrawPile,   6);
+        InstantiateCard("Defend",           CardFlavour.Skill,  "silent5",              "Gain 5 block.",                                                        1,      new Effect(TargetType.Player) {shield = 5},                          CardState.InDrawPile,   6);
+        InstantiateCard("Draw",             CardFlavour.Skill,  "silent2",              "Draw two cards.",                                                      1,      new Effect(TargetType.Player) { cardsToDraw = 2 },                   CardState.Locked,       2);
+        InstantiateCard("Compromise",       CardFlavour.Skill,  "silent4",              "Gain 8 block, discard one card.",                                      1,      new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 },    CardState.InDrawPile,   2);
+        InstantiateCard("Retain",           CardFlavour.Power,  "silent7",              "At the end of every turn retain up to one card. Exhaust.",             2,      new Effect(TargetType.Player) { cardsToRetain = 1, exhaust = true }, CardState.Locked,       1);
+        InstantiateCard("Storm of steel",   CardFlavour.Skill,  "replaceHandWithShivs", "Discard your hand. Add 1 shiv to your hand for each card discarded.",  2,      new Effect(TargetType.Player) { replaceHandWithShivs = true },       CardState.Locked,       1);
+        InstantiateCard("Blade Dance",      CardFlavour.Skill,  "add3shivs",            "Add 3 shivs into your hand",                                           1,      new Effect(TargetType.Player) { shivsToSpawn = 3 },                  CardState.Locked,       1);
+        InstantiateCard("Cloak and Dagger", CardFlavour.Skill,  "6block",               "Gain 6 Block, add Shiv.",                                              1,      new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 },      CardState.InDrawPile,   3);
+        InstantiateCard("Infinite Blades",  CardFlavour.Power,  "startturn",            "At the start of your turn, add 1 Shiv into your hand",                 1,      new Effect(TargetType.Player) { shivsAtTurnStart = 1 },              CardState.InDrawPile,   1);
+        InstantiateCard("Accuracy",         CardFlavour.Power,  "3dmg",                 "Shivs deal 3 additional damage",                                       1,      new Effect(TargetType.Player) { shivBonusDmg = 3 },                  CardState.Locked,       1);
+        InstantiateCard("Foot work",        CardFlavour.Power,  "footwork",             "Gain 2 dexterity. Dexterity increases shield gained from cards.",      2,      new Effect(TargetType.Player) { dexterity = 2 },                     CardState.InDrawPile,   2);
+        InstantiateCard("Neutralize",       CardFlavour.Attack, "neutralize",           "Deal 3 damage. Apply 1 weak.",                                         0,      new Effect(TargetType.Enemy) { damage = 3, weak = 1 },               CardState.Locked,       2);
+        InstantiateCard("Rage",             CardFlavour.Power,  "art1",                 "Gain 3 strength. Lose 3 dexterity.",                                   2,      new Effect(TargetType.Player) { strength = 3, dexterity = -3},       CardState.InDrawPile,   1);
+        InstantiateCard("Sabotage",         CardFlavour.Power,  "losestrength",         "Enemy loses 2 strength",                                               1,      new Effect(TargetType.Enemy) { strength = -2 },                      CardState.InDrawPile,   1);
+        InstantiateCard("Wraith Form",      CardFlavour.Power,  "bonk2",                "Gain 2 Intangible. Lose 1 dexterity every turn.",                      3,      new Effect(TargetType.Player) { intangible = 2, wraith = 1 },        CardState.Locked,       1);
+        InstantiateCard("Poisoned stab",    CardFlavour.Attack, "poison",               "Deal 5 damage, apply 3 poison",                                        1,      new Effect(TargetType.Enemy) { poison = 3, damage = 5},              CardState.Locked,       1);
+        InstantiateCard("Deadly poison",    CardFlavour.Attack, "poison2",              "Apply 5 poison",                                                       1,      new Effect(TargetType.Enemy) { poison = 5 },                         CardState.Locked,       1);
 
         newHand();
         PlaceCards();
