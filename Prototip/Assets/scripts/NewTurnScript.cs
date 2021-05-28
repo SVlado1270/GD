@@ -29,47 +29,146 @@ public class NewTurnScript : MonoBehaviour
         switch(enemyStats.name)
         {
             case "cultist":
-                if (currentTurnIndex == 0)
                 {
-                    int ritual = 3;
-                    string hover_text = "This enemy intends to use a Buff.";
-                    enemyStats.UpdateIntent("buff_intent", ritual, hover_text);
-                    enemyEffect = new Effect(TargetType.Enemy) { ritual = ritual };
+                    if (currentTurnIndex == 0)
+                    {
+                        int ritual = 3;
+                        string hover_text = "This enemy intends to use a Buff.";
+                        enemyStats.UpdateIntent("buff_intent", ritual, hover_text);
+                        enemyEffect = new Effect(TargetType.Enemy) { ritual = ritual };
+                    }
+                    else
+                    {
+                        int damage = 6;
+                        string hoverText = "This enemy intends to attack for " + damage.ToString() + " damage.";
+                        enemyStats.UpdateIntent("attack_intent", damage, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { damage = damage };
+                    }
+                    break;
                 }
-                else
-                {
-                    int cultistDamage = 6;
-                    string hover_text = "This enemy intends to attack for " + cultistDamage.ToString() + " damage.";
-                    enemyStats.UpdateIntent("attack_intent", cultistDamage, hover_text);
-                    enemyEffect = new Effect(TargetType.Player) { damage = cultistDamage };
-                }
-                break;
             case "slaver":
-                int slaverDamage;
-                if (currentTurnIndex % 2 == 0)
                 {
-                    slaverDamage = Random.Range(4, 11);
+                    int damage;
+                    if (currentTurnIndex % 2 == 0)
+                    {
+                        damage = Random.Range(4, 11);
+                    }
+                    else
+                    {
+                        damage = Random.Range(12, 15);
+                    }
+                    string hoverText = "This enemy intends to attack for " + damage.ToString() + " damage.";
+                    enemyStats.UpdateIntent("attack_intent", damage, hoverText);
+                    enemyEffect = new Effect(TargetType.Player) { damage = damage };
+                    break;
                 }
-                else
-                {
-                    slaverDamage = Random.Range(12, 15);
-                }
-                string slaverHoverText = "This enemy intends to attack for " + slaverDamage.ToString() + " damage.";
-                enemyStats.UpdateIntent("attack_intent", slaverDamage, slaverHoverText);
-                enemyEffect = new Effect(TargetType.Player) { damage = slaverDamage };
-                break;
             case "mantisLord":
-                break;
+                {
+                    int damage;
+                    if (currentTurnIndex % 2 == 0)
+                    {
+                        damage = Random.Range(6, 15);
+                    }
+                    else
+                    {
+                        damage = Random.Range(16, 20);
+                    }
+                    string hoverText = "This enemy intends to attack for " + damage.ToString() + " damage.";
+                    enemyStats.UpdateIntent("attack_intent", damage, hoverText);
+                    enemyEffect = new Effect(TargetType.Player) { damage = damage };
+                    break;
+                }
             case "fungi":
-                break;
+                {
+                    float p = Random.Range(0f, 100f);
+                    if (p <= 35f)
+                    {
+                        int poison = Random.Range(3, 8);
+                        string hoverText = "This enemy intends to apply " + poison.ToString() + " poison.";
+                        enemyStats.UpdateIntent("poison_intent", poison, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { poison = poison };
+                    }
+                    else
+                    {
+                        int shield = Random.Range(3, 10);
+                        string hoverText = "This enemy intends to defend.";
+                        enemyStats.UpdateIntent("shield_intent", shield, hoverText);
+                        enemyEffect = new Effect(TargetType.Enemy) { shield = shield };
+                    }
+                    break;
+                }
             case "umu":
-                break;
+                {
+                    float p = Random.Range(0f, 100f);
+                    if (p <= 60f)
+                    {
+                        int damage = 6;
+                        string hoverText = "This enemy intends to attack for " + damage.ToString() + " damage.";
+                        enemyStats.UpdateIntent("attack_intent", damage, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { damage = damage };
+                    }
+                    else
+                    {
+                        int strength = 3;
+                        string hoverText = "This enemy intends to use a Buff.";
+                        enemyStats.UpdateIntent("buff_intent", strength, hoverText);
+                        enemyEffect = new Effect(TargetType.Enemy) { strength = strength };
+                    }
+                    break;
+                }
             case "radiance":
-                break;
+                {
+                    float p = Random.Range(0f, 100f);
+                    if (p < 55f)
+                    {
+                        int damage = 10;
+                        string hoverText = "This enemy intends to attack and use a debuff.";
+                        enemyStats.UpdateIntent("attack_debuff_intent", damage, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { damage = damage, wraith = 1 };
+                        break;
+                    }
+                    else if(p < 90f)
+                    {
+                        int shield = 10;
+                        string hoverText = "This enemy intends to defend.";
+                        enemyStats.UpdateIntent("shield_intent", shield, hoverText);
+                        enemyEffect = new Effect(TargetType.Enemy) { shield = shield };
+                        break;
+                    }
+                    else
+                    {
+                        int value = Random.Range(1, 3);
+                        string hoverText = "This enemy intends to apply a debuff.";
+                        enemyStats.UpdateIntent("debuff_intent", value, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { weak = value, strength = -value };
+                        break;
+                    }
+                }
             case "corruptHeart":
-                break;
+                {
+                    float p = Random.Range(0f, 100f);
+                    if(p < 33f)
+                    {
+                        int damage = 10;
+                        string hoverText = "This enemy intends to attack for " + damage.ToString() + " damage.";
+                        enemyStats.UpdateIntent("attack_intent", damage, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { damage = damage };
+                        break;
+                    }
+                    else
+                    {
+                        int shield = 10;
+                        int strength = Random.Range(3, 6);
+                        string hoverText = "This enemy intends to defend and use a buff.";
+                        enemyStats.UpdateIntent("defend_buff_intent", shield, hoverText);
+                        enemyEffect = new Effect(TargetType.Enemy) { shield = shield, strength = strength };
+                        break;
+                    }
+                }
             case "collector":
-                break;
+                {
+                    break;
+                }
         }
         currentTurnIndex++;
     }

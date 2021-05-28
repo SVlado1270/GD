@@ -285,12 +285,12 @@ PrefabInstance:
     - target: {fileID: 4049669793133662792, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.691
       objectReference: {fileID: 0}
     - target: {fileID: 4049669793133662792, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4049669793799344744, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
@@ -2530,7 +2530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &750653672
 Transform:
   m_ObjectHideFlags: 0
@@ -3193,11 +3193,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
   - {fileID: 21300000, guid: 4d56b237f8bcdd748baa117f4090378f, type: 3}
   - {fileID: 21300000, guid: f79f597306c7b1d4dba2d1c671eebc44, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
+  - {fileID: 21300000, guid: 818600c863873bf43ba84e8fb51ed223, type: 3}
+  - {fileID: 21300000, guid: 7daf05f9bc9229142b698d97d6ec443b, type: 3}
+  - {fileID: 21300000, guid: fea8c65457f9af347a80db772fac22b0, type: 3}
+  - {fileID: 21300000, guid: 1ad4f19d18aa05341aba9012caa3460e, type: 3}
+  - {fileID: 21300000, guid: 1d0f860f5a485964084d58506efbf29e, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
