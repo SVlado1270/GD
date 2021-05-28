@@ -112,9 +112,22 @@ public class healthBarScript : MonoBehaviour
 
     }
 
+    public void resetStats()
+    {
+        weak = 0;
+        retain = 0;
+        dexterity = 0;
+        strength = 0;
+        accuracy = 0;
+        blades = 0;
+        poison = 0;
+        intagible = 0;
+        wraith = 0;
+        ritual = 0;
+        shield = 0;
+    }
     void Start()
     {
-        Debug.Log("START WAS CALLED");
         //fetch components
         bar = transform.Find("statsCanvas").Find("Slider").GetComponent<Slider>();
         barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();

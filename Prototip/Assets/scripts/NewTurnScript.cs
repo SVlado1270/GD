@@ -14,14 +14,14 @@ public class NewTurnScript : MonoBehaviour
     int currentEnemyIndex;
     healthBarScript enemyStats;
 
-
+    int cardsToUnlock;
 
     Effect enemyEffect;
     int currentTurnIndex = 0;
 
     public static void onKill()
     {
-        Debug.Log("kill happened");
+        //Debug.Log("kill happened");
     }
 
     public void ChooseAnotherActionForEnemy()
@@ -49,6 +49,7 @@ public class NewTurnScript : MonoBehaviour
 
     private void Start()
     {
+        cardsToUnlock = 1;
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject e in enemies)
         {
@@ -88,20 +89,27 @@ public class NewTurnScript : MonoBehaviour
 
     public void NewTurn()
     {
+        print("NEW TURN CALLED");
+        if (enemyStats.isDead())
+        {
+            if (cardManager.nCardsToSelect == 0 && cardManager.hasUnlocked == false)
+            {
+                return;
+            }
+            NextLevel();
+        }
+
         if (cardManager.hasRetained == false && cardManager.retainUpToNCards > 0)
         {
             cardManager.SelectCardsMode(cardManager.retainUpToNCards, CardSelectionType.Retain);
             return;
         }
 
-        if (cardManager.gameState != GameState.Combat)
+        if (cardManager.gameState != GameState.Combat && cardManager.gameState != GameState.GameOver)
         {
             TooltipScript.ShowTooltip("Finish card selection first", 3f);
             return;
         }
-        
-
-
 
         EnemyTurn();
         PlayerNewTurn();
@@ -111,15 +119,25 @@ public class NewTurnScript : MonoBehaviour
 
     public void PlayerNewTurn()
     {
-        playerStats.startTurnEffects(); 
+        playerStats.startTurnEffects();
         energyManager.ResetEnergy();
-        
+
         cardManager.newHand();
-        
+
         playerStats.UpdatePropsUI();
         enemyStats.UpdatePropsUI();
 
         playerStats.endTurnEffects();
+    }
+
+    public void playerResetAtNewLevel()
+    {
+        playerStats.resetStats();
+        energyManager.ResetEnergy();
+
+        cardManager.newHand();
+        playerStats.UpdatePropsUI();
+        enemyStats.UpdatePropsUI();
     }
 
     public void EnemyTurn()
@@ -151,10 +169,6 @@ public class NewTurnScript : MonoBehaviour
 
 
         //choose action for next turn
-        if (checkForKill())
-        {
-            return;
-        }
         ChooseAnotherActionForEnemy();
 
         enemyStats.endTurnEffects();
@@ -172,6 +186,7 @@ public class NewTurnScript : MonoBehaviour
         currentTurnIndex = 0;
         if(currentEnemyIndex >= 0)
         {
+            cardManager.SelectCardsMode(cardsToUnlock, CardSelectionType.Unlock);
             enemies[currentEnemyIndex].SetActive(false);
         }
         if(currentEnemyIndex + 1 < enemies.Length)

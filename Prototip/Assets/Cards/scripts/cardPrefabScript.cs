@@ -87,7 +87,9 @@ public enum CardState
     InDiscardPile,
     Selected,
     Retained,
-    Exhausted
+    Exhausted,
+    Locked,
+    ToBeUnlocked
 }
 
 public class cardPrefabScript : MonoBehaviour

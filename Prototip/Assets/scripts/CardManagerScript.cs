@@ -16,7 +16,8 @@ public enum GameState
 public enum CardSelectionType
 {
     Discard,
-    Retain
+    Retain,
+    Unlock
 }
 
 public class CardManagerScript : MonoBehaviour
@@ -32,6 +33,7 @@ public class CardManagerScript : MonoBehaviour
     public int nCardsToSelect;
     public int retainUpToNCards = 0;
     public bool hasRetained = true;
+    public bool hasUnlocked = true;
     public int shivsToDraw = 0;
     public int shivsBonusDamage = 0;
     public CardSelectionType cardSelectionType;
@@ -52,25 +54,26 @@ public class CardManagerScript : MonoBehaviour
         playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<healthBarScript>();
         gameState = GameState.Combat;
         nCardsToSelect = 0;
+        hasUnlocked = true;
         //some random cards for testing purposes
-        //params:       title,          flavour,            sprite,     description,        energy, effect,                                         count
-        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "Deal 6 damage.",   1,      new Effect(TargetType.Enemy) {damage = 6},       122);
-        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "Gain 5 block.",     1,      new Effect(TargetType.Player) {shield = 5},      6);
-        InstantiateCard("Draw", CardFlavour.Skill, "silent2", "Draw two cards.", 1, new Effect(TargetType.Player) { cardsToDraw = 2 },  2);
-        InstantiateCard("Compromise", CardFlavour.Skill, "silent4", "Gain 8 block, discard one card.", 1, new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 }, 3);
-        InstantiateCard("Retain", CardFlavour.Power, "silent7", "At the end of every turn retain up to one card. Exhaust.", 2, new Effect(TargetType.Player) { cardsToRetain = 1, exhaust = true }, 1);
-        InstantiateCard("Storm of steel", CardFlavour.Skill, "replaceHandWithShivs", "Discard your hand. Add 1 shiv to your hand for each card discarded.", 2, new Effect(TargetType.Player) { replaceHandWithShivs = true }, 1);
-        InstantiateCard("Blade Dance", CardFlavour.Skill, "add3shivs", "Add 3 shivs into your hand", 1, new Effect(TargetType.Player) { shivsToSpawn = 3 }, 1);
-        InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "6block", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 });
-        InstantiateCard("Infinite Blades", CardFlavour.Power, "startturn", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, 1);
-        InstantiateCard("Accuracy", CardFlavour.Power, "3dmg", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 });
-        InstantiateCard("Foot work", CardFlavour.Power, "footwork", "Gain 2 dexterity. Dexterity increases shield gained from cards.", 2, new Effect(TargetType.Player) { dexterity = 2 }, 1);
-        InstantiateCard("Neutralize", CardFlavour.Attack, "neutralize", "Deal 3 damage. Apply 1 weak.", 0, new Effect(TargetType.Enemy) { damage = 3, weak = 1 }, 1);
-        InstantiateCard("Rage", CardFlavour.Power, "art1", "Gain 3 strength. Lose 3 dexterity.", 2, new Effect(TargetType.Player) { strength = 3, dexterity = -3}, 1);
-        InstantiateCard("Sabotage", CardFlavour.Power, "losestrength", "Enemy loses 2 strength", 1, new Effect(TargetType.Enemy) { strength = -2 }, 1);
-        InstantiateCard("Wraith Form", CardFlavour.Power, "bonk2", "Gain 2 Intangible. Lose 1 dexterity every turn.", 3, new Effect(TargetType.Player) { intangible = 2, wraith = 1 }, 1);
-        InstantiateCard("Poisoned stab", CardFlavour.Attack, "poison", "Deal 5 damage, apply 3 poison", 1, new Effect(TargetType.Enemy) { poison = 3, damage = 5}, 5);
-        InstantiateCard("Deadly poison", CardFlavour.Attack, "poison2", "Apply 5 poison", 1, new Effect(TargetType.Enemy) { poison = 5 }, 5);
+        //params:       title,          flavour,            sprite,     description,        energy, effect,              state,                           count
+        InstantiateCard("Strike",       CardFlavour.Attack, "silent1",  "Deal 6 damage.",   1,      new Effect(TargetType.Enemy) {damage = 6},   CardState.Locked,    12);
+        InstantiateCard("Defend",       CardFlavour.Skill,  "silent5",  "Gain 5 block.",     1,      new Effect(TargetType.Player) {shield = 5}, CardState.Locked, 6);
+        InstantiateCard("Draw", CardFlavour.Skill, "silent2", "Draw two cards.", 1, new Effect(TargetType.Player) { cardsToDraw = 2 }, CardState.Locked, 2);
+        InstantiateCard("Compromise", CardFlavour.Skill, "silent4", "Gain 8 block, discard one card.", 1, new Effect(TargetType.Player) { cardsToDiscard = 1, shield = 8 }, CardState.Locked, 3);
+        InstantiateCard("Retain", CardFlavour.Power, "silent7", "At the end of every turn retain up to one card. Exhaust.", 2, new Effect(TargetType.Player) { cardsToRetain = 1, exhaust = true }, CardState.Locked, 3);
+        InstantiateCard("Storm of steel", CardFlavour.Skill, "replaceHandWithShivs", "Discard your hand. Add 1 shiv to your hand for each card discarded.", 2, new Effect(TargetType.Player) { replaceHandWithShivs = true }, CardState.InDrawPile, 1);
+        InstantiateCard("Blade Dance", CardFlavour.Skill, "add3shivs", "Add 3 shivs into your hand", 1, new Effect(TargetType.Player) { shivsToSpawn = 3 }, CardState.Locked, 1);
+        InstantiateCard("Cloak and Dagger", CardFlavour.Skill, "6block", " Gain 6 Block, add Shiv.", 1, new Effect(TargetType.Player) { shivsToSpawn = 1, shield = 6 }, CardState.Locked, 1);
+        InstantiateCard("Infinite Blades", CardFlavour.Power, "startturn", "At the start of your turn, add 1 Shiv into your hand", 1, new Effect(TargetType.Player) { shivsAtTurnStart = 1 }, CardState.Locked, 1);
+        InstantiateCard("Accuracy", CardFlavour.Power, "3dmg", "Shivs deal 3 additional damage", 1, new Effect(TargetType.Player) { shivBonusDmg = 3 }, CardState.InDrawPile, 1);
+        InstantiateCard("Foot work", CardFlavour.Power, "footwork", "Gain 2 dexterity. Dexterity increases shield gained from cards.", 2, new Effect(TargetType.Player) { dexterity = 2 }, CardState.InDrawPile, 1);
+        InstantiateCard("Neutralize", CardFlavour.Attack, "neutralize", "Deal 3 damage. Apply 1 weak.", 0, new Effect(TargetType.Enemy) { damage = 3, weak = 1 }, CardState.InDrawPile, 1);
+        InstantiateCard("Rage", CardFlavour.Power, "art1", "Gain 3 strength. Lose 3 dexterity.", 2, new Effect(TargetType.Player) { strength = 3, dexterity = -3}, CardState.InDrawPile, 1);
+        InstantiateCard("Sabotage", CardFlavour.Power, "losestrength", "Enemy loses 2 strength", 1, new Effect(TargetType.Enemy) { strength = -2 }, CardState.InDrawPile, 1);
+        InstantiateCard("Wraith Form", CardFlavour.Power, "bonk2", "Gain 2 Intangible. Lose 1 dexterity every turn.", 3, new Effect(TargetType.Player) { intangible = 2, wraith = 1 }, CardState.InDrawPile, 1);
+        InstantiateCard("Poisoned stab", CardFlavour.Attack, "poison", "Deal 5 damage, apply 3 poison", 1, new Effect(TargetType.Enemy) { poison = 3, damage = 5}, CardState.InDrawPile, 3);
+        InstantiateCard("Deadly poison", CardFlavour.Attack, "poison2", "Apply 5 poison", 1, new Effect(TargetType.Enemy) { poison = 5 }, CardState.InDrawPile, 5);
 
 
         //weak losestrength art1 poison2 poison footwork
@@ -94,6 +97,15 @@ public class CardManagerScript : MonoBehaviour
                 break;
             case CardSelectionType.Retain:
                 confirmButton.GetComponentInChildren<Text>().text = "RETAIN";
+                break;
+            case CardSelectionType.Unlock:
+                for (int i = 0; i < 3; i++)
+                {
+                    DrawRandomCard(CardState.Locked, CardState.ToBeUnlocked);
+                }
+                PlaceCards();
+                confirmButton.GetComponentInChildren<Text>().text = "UNLOCK";
+                hasUnlocked = true;
                 break;
         }
     }
@@ -133,6 +145,12 @@ public class CardManagerScript : MonoBehaviour
                 hasRetained = true;
                 GameObject.FindGameObjectWithTag("EndTurnButton").GetComponent<NewTurnScript>().NewTurn();
                 break;
+            case CardSelectionType.Unlock:
+                ChangeCardsWithState(CardState.Selected, CardState.InDrawPile);
+                ChangeCardsWithState(CardState.ToBeUnlocked, CardState.Locked);
+                hasUnlocked = true;
+                GameObject.FindGameObjectWithTag("EndTurnButton").GetComponent<NewTurnScript>().playerResetAtNewLevel();
+                break;
         }
         confirmButton.SetActive(false);
         PlaceCards();
@@ -151,13 +169,14 @@ public class CardManagerScript : MonoBehaviour
         return counter;
     }
 
-    public void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect, int count=1)
+    public void InstantiateCard(string title, CardFlavour flavour, string spriteName, string description, int energy, Effect effect, CardState cardState, int count=1)
     {
         for (int i = 0; i < count; i++)
         {
             GameObject card = Instantiate(cardPrefab, this.transform.position, Quaternion.identity);
             cardPrefabScript cardController = card.GetComponent<cardPrefabScript>();
             cardController.Init(title, flavour, spriteName, description, energy, effect);
+            cardController.state = cardState;
             allCards.Add(card);
         }
     }
@@ -192,8 +211,14 @@ public class CardManagerScript : MonoBehaviour
         float selectedSpacing = 2 * inHandSpacing;
         float selectedLeftCoord = selectedCenter.x - selectedSpacing * (nSelectedCards - 1) / 2;
 
+        int nToBeUnlockedCards = CountCardsWithState(CardState.ToBeUnlocked);
+        Vector2 toBeUnlockedCenter = transform.position + new Vector3(0, 2.5f);
+        float toBeUnlockedSpacing = 2 * inHandSpacing;
+        float toBeUnlockedLeftCoord = toBeUnlockedCenter.x - toBeUnlockedSpacing * (nToBeUnlockedCards - 1) / 2;
+
         int inHandIndex = 0;
         int selectedIndex = 0;
+        int toBeUnlockedIndex = 0;
         for (int i = 0; i < allCards.Count; i++)
         {
             GameObject card = allCards[i];
@@ -201,6 +226,11 @@ public class CardManagerScript : MonoBehaviour
             switch (controller.state)
             {
                 case CardState.InHand:
+                    if(gameState == GameState.SelectCards && cardSelectionType == CardSelectionType.Unlock)
+                    {
+                        card.gameObject.SetActive(false);
+                        break;
+                    }
                     card.gameObject.SetActive(true);
                     card.transform.rotation = Quaternion.Euler(0, 0, maxRotation - inHandIndex * perCardRotation);
                     card.transform.localPosition = new Vector2(leftCoord + inHandIndex * inHandSpacing, center.y);
@@ -211,9 +241,17 @@ public class CardManagerScript : MonoBehaviour
                 case CardState.Selected:
                     card.gameObject.SetActive(true);
                     card.transform.localPosition = new Vector2(selectedLeftCoord + selectedIndex * selectedSpacing, selectedCenter.y);
-                    card.transform.localScale = new Vector3(cardScale, cardScale, cardScale);
+                    card.transform.localScale = new Vector3(cardScale * 1.3F, cardScale * 1.3F, cardScale * 1.3F);
                     card.transform.rotation = Quaternion.identity;
                     selectedIndex++;
+                    controller.PutOnTop();
+                    break;
+                case CardState.ToBeUnlocked:
+                    card.gameObject.SetActive(true);
+                    card.transform.localPosition = new Vector2(toBeUnlockedLeftCoord + toBeUnlockedIndex * toBeUnlockedSpacing, toBeUnlockedCenter.y);
+                    card.transform.localScale = new Vector3(cardScale, cardScale, cardScale);
+                    card.transform.rotation = Quaternion.identity;
+                    toBeUnlockedIndex++;
                     controller.PutOnTop();
                     break;
                 case CardState.InDrawPile:
@@ -223,6 +261,9 @@ public class CardManagerScript : MonoBehaviour
                     card.gameObject.SetActive(false);
                     break;
                 case CardState.Exhausted:
+                    card.gameObject.SetActive(false);
+                    break;
+                case CardState.Locked:
                     card.gameObject.SetActive(false);
                     break;
             }
@@ -259,14 +300,14 @@ public class CardManagerScript : MonoBehaviour
     }
 
 
-    public bool DrawRandomCard()
+    public bool DrawRandomCard(CardState fromState, CardState toState)
     {
         var indexes = new List<int>();
         for (int i = 0; i < allCards.Count; i++)
         {
             GameObject card = allCards[i];
             var controller = card.GetComponent<cardPrefabScript>();
-            if (controller.state == CardState.InDrawPile)
+            if (controller.state == fromState)
             {
                 indexes.Add(i);
             }
@@ -276,18 +317,18 @@ public class CardManagerScript : MonoBehaviour
             return false;
         }
         var random = Random.Range(0, indexes.Count);
-        allCards[indexes[random]].GetComponent<cardPrefabScript>().state = CardState.InHand;
+        allCards[indexes[random]].GetComponent<cardPrefabScript>().state = toState;
         //TODO: trigger draw animation
         return true;
     }
 
     public void ForceDrawRandomCard()
     {
-        var drawPileNotEmpty = DrawRandomCard();
+        var drawPileNotEmpty = DrawRandomCard(CardState.InDrawPile, CardState.InHand);
         if (drawPileNotEmpty == false)
         {
             MoveDiscardedCardsToDrawPile();
-            DrawRandomCard();
+            DrawRandomCard(CardState.InDrawPile, CardState.InHand);
         }
     }
 

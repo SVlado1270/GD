@@ -27,13 +27,28 @@ public class SelectCardScript : MonoBehaviour
                 controller.PutOnTop();
                 break;
             case GameState.SelectCards:
-                if (controller.state == CardState.InHand && cardManager.CountCardsWithState(CardState.Selected) < cardManager.nCardsToSelect)
+                if (cardManager.cardSelectionType == CardSelectionType.Unlock)
                 {
-                    controller.state = CardState.Selected;
+                    if(controller.state == CardState.Selected)
+                    {
+                        controller.state = CardState.ToBeUnlocked;
+                    }
+                    else if (controller.state == CardState.ToBeUnlocked)
+                    {
+                        cardManager.ChangeCardsWithState(CardState.Selected, CardState.ToBeUnlocked);
+                        controller.state = CardState.Selected;
+                    }
                 }
-                else if (controller.state == CardState.Selected) 
+                else
                 {
-                    controller.state = CardState.InHand;
+                    if (controller.state == CardState.InHand && cardManager.CountCardsWithState(CardState.Selected) < cardManager.nCardsToSelect)
+                    {
+                        controller.state = CardState.Selected;
+                    }
+                    else if (controller.state == CardState.Selected)
+                    {
+                        controller.state = CardState.InHand;
+                    }
                 }
                 cardManager.PlaceCards();
                 break;
