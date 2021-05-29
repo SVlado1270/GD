@@ -115,7 +115,14 @@ public class SelectCardScript : MonoBehaviour
             energyManager.consumeCard(controller);
             if (controller.effect.exhaust)
             {
-                controller.state = CardState.Exhausted;
+                if (controller.effect.isShiv)
+                {
+                    controller.state = CardState.ExhaustedShiv;
+                }
+                else
+                {
+                    controller.state = CardState.Exhausted;
+                }
             }
         }
     }

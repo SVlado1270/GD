@@ -97,7 +97,8 @@ public enum CardState
     Retained,
     Exhausted,
     Locked,
-    ToBeUnlocked
+    ToBeUnlocked,
+    ExhaustedShiv
 }
 
 public class cardPrefabScript : MonoBehaviour

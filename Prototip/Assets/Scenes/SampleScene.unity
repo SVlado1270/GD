@@ -8032,7 +8032,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameOverMessage: {fileID: 1252804368}
-  enemies: []
+  enemies:
+  - {fileID: 1929578843}
+  - {fileID: 1029508040}
+  - {fileID: 1966698822}
+  - {fileID: 1284051329}
+  - {fileID: 1012216339}
+  - {fileID: 572491869}
+  - {fileID: 1934396654}
+  - {fileID: 750653671}
 --- !u!1 &2096630226
 GameObject:
   m_ObjectHideFlags: 0

@@ -198,7 +198,7 @@ public class NewTurnScript : MonoBehaviour
     private void Start()
     {
         cardsToUnlock = 1;
-        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        
         foreach (GameObject e in enemies)
         {
             e.SetActive(false);

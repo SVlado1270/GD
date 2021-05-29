@@ -68,13 +68,13 @@ public class CardManagerScript : MonoBehaviour
         InstantiateCard("Infinite Blades",  CardFlavour.Power,  "startturn",            "At the start of your turn, add 1 Shiv into your hand",                 1,      new Effect(TargetType.Player) { shivsAtTurnStart = 1 },              CardState.InDrawPile,   1);
         InstantiateCard("Accuracy",         CardFlavour.Power,  "3dmg",                 "Shivs deal 3 additional damage",                                       1,      new Effect(TargetType.Player) { shivBonusDmg = 3 },                  CardState.Locked,       1);
         InstantiateCard("Foot work",        CardFlavour.Power,  "footwork",             "Gain 2 dexterity. Dexterity increases shield gained from cards.",      2,      new Effect(TargetType.Player) { dexterity = 2 },                     CardState.InDrawPile,   2);
-        InstantiateCard("Neutralize",       CardFlavour.Attack, "neutralize",           "Deal 3 damage. Apply 1 weak.",                                         0,      new Effect(TargetType.Enemy) { damage = 3, weak = 1 },               CardState.Locked,       2);
+        InstantiateCard("Neutralize",       CardFlavour.Attack, "neutralize",           "Deal 3 damage. Apply 1 weak. Weakened enemies deal 25% lees damage.",  0,      new Effect(TargetType.Enemy) { damage = 3, weak = 1 },               CardState.Locked,       2);
         InstantiateCard("Rage",             CardFlavour.Power,  "art1",                 "Gain 3 strength. Lose 3 dexterity.",                                   2,      new Effect(TargetType.Player) { strength = 3, dexterity = -3},       CardState.InDrawPile,   1);
         InstantiateCard("Sabotage",         CardFlavour.Power,  "losestrength",         "Enemy loses 2 strength",                                               1,      new Effect(TargetType.Enemy) { strength = -2 },                      CardState.InDrawPile,   1);
         InstantiateCard("Wraith Form",      CardFlavour.Power,  "wraith",               "Gain 2 Intangible. Lose 1 dexterity every turn.",                      3,      new Effect(TargetType.Player) { intangible = 2, wraith = 1 },        CardState.Locked,       1);
         InstantiateCard("Poisoned stab",    CardFlavour.Attack, "poison",               "Deal 5 damage, apply 3 poison",                                        1,      new Effect(TargetType.Enemy) { poison = 3, damage = 5},              CardState.Locked,       1);
         InstantiateCard("Deadly poison",    CardFlavour.Attack, "poison2",              "Apply 5 poison",                                                       1,      new Effect(TargetType.Enemy) { poison = 5 },                         CardState.Locked,       1);
-        InstantiateCard("Heal",             CardFlavour.Skill,  "heal_skill",           "Restore 5 hp. Exhaust.",                                               1,      new Effect(TargetType.Player) { heal = 5, exhaust = true },          CardState.InDrawPile,   1);  
+        InstantiateCard("Heal",             CardFlavour.Skill,  "heal_skill",           "Restore 5 hp. Exhaust(can only be played once per level).",            1,      new Effect(TargetType.Player) { heal = 5, exhaust = true },          CardState.InDrawPile,   1);  
         InstantiateCard("Bonk",             CardFlavour.Attack, "bonk2",                "Apply 3 poison",                                                       0,      new Effect(TargetType.Enemy) { poison = 3},                          CardState.InDrawPile,   1);   
         InstantiateCard("Delay",            CardFlavour.Power,  "energy_power",         "Next turn, gain 2 energy.",                                            1,      new Effect(TargetType.Player) { energyNextTurn = 2},                 CardState.InDrawPile,   1);
         newHand();
@@ -260,6 +260,9 @@ public class CardManagerScript : MonoBehaviour
                     card.gameObject.SetActive(false);
                     break;
                 case CardState.Exhausted:
+                    card.gameObject.SetActive(false);
+                    break;
+                case CardState.ExhaustedShiv:
                     card.gameObject.SetActive(false);
                     break;
                 case CardState.Locked:

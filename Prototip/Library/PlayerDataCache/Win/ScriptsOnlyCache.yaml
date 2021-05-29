@@ -341,7 +341,7 @@ ScriptsOnlyBuild:
     className: PixelPerfectCamera
   - hash:
       serializedVersion: 2
-      Hash: 72bda48d93526f9e3a3bcfb5250537d2
+      Hash: beda2be648982d2956ab1470119e8560
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: healthBarScript
@@ -365,7 +365,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: 5b52c7e00816ea87eaf27643531ff739
+      Hash: 96764939be65f4529f7e423d6bc9c812
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: NewTurnScript
@@ -437,7 +437,7 @@ ScriptsOnlyBuild:
     className: ScrollRect
   - hash:
       serializedVersion: 2
-      Hash: 7b869ffef82f20d9b1aa16825bf13f8c
+      Hash: c5c56fce1c0dc94364e703d9cac781f4
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CardManagerScript
@@ -569,7 +569,7 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
-      Hash: ae91350d6e8bf5f7ed35395b17f80169
+      Hash: 07d3e2e3e56bccafd74c3c57d1161341
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: energyManagerScript
