@@ -112,8 +112,12 @@ public class healthBarScript : MonoBehaviour
 
     }
 
-    public void resetStats()
+    public void resetStats(bool resetHealth)
     {
+        if(resetHealth)
+        {
+            health = maxHealth;
+        }
         weak = 0;
         retain = 0;
         dexterity = 0;
@@ -128,6 +132,10 @@ public class healthBarScript : MonoBehaviour
     }
     void Start()
     {
+        // maxHealth = 10; //demo
+
+
+
         //fetch components
         bar = transform.Find("statsCanvas").Find("Slider").GetComponent<Slider>();
         barText = transform.Find("statsCanvas").Find("Health").GetComponent<TextMeshProUGUI>();
@@ -161,7 +169,7 @@ public class healthBarScript : MonoBehaviour
 
     }
 
-    void updateSliderValue()
+    public void updateSliderValue()
     {
         float value = (float)health / (float)maxHealth;
         if (value < 0f)

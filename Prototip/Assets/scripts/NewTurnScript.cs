@@ -6,6 +6,7 @@ using TMPro;
 
 public class NewTurnScript : MonoBehaviour
 {
+    public TextMeshProUGUI gameOverMessage;
     energyManagerScript energyManager;
     CardManagerScript cardManager;
     healthBarScript playerStats;
@@ -191,7 +192,6 @@ public class NewTurnScript : MonoBehaviour
         currentTurnIndex++;
     }
 
-    //
 
 
 
@@ -229,15 +229,51 @@ public class NewTurnScript : MonoBehaviour
         }
         else if (playerStats.isDead())
         {
+            transform.Find("Text").GetComponent<Text>().text = "RESTART";
             cardManager.gameState = GameState.GameOver;
             return true;
         }
         return false;
     }
 
+    public void RestartGame()
+    {
+        for(int i = 0; i < enemies.Length; i++)
+        {
+            enemies[i].GetComponent<healthBarScript>().resetStats(true);
+            enemies[i].SetActive(false);
+        }
+        currentEnemyIndex = -1;
+        playerStats.resetStats(true);
+        energyManager.ResetEnergy();
+
+        cardManager.ChangeCardsWithState(CardState.Exhausted, CardState.InDrawPile);
+        cardManager.ChangeCardsWithState(CardState.InDiscardPile, CardState.InDrawPile);
+        cardManager.ChangeCardsWithState(CardState.InHand, CardState.InDrawPile);
+        cardManager.newHand();
+        playerStats.UpdatePropsUI();
+        playerStats.updateSliderValue();
+
+        enemyStats.UpdatePropsUI();
+
+        playerStats.corpseAvatar.SetActive(false);
+        playerStats.avatar.SetActive(true);
+        NextLevel();
+        transform.Find("Text").GetComponent<Text>().text = "END TURN";
+        cardManager.gameState = GameState.Combat;
+    }
+
     public void NewTurn()
     {
         print("NEW TURN CALLED");
+
+        if(cardManager.gameState == GameState.GameOver)
+        {
+            TooltipScript.ShowTooltip("You died.", 3f);
+            RestartGame();
+            return;
+        }
+
         if (enemyStats.isDead())
         {
             if (cardManager.nCardsToSelect == 0 && cardManager.hasUnlocked == false)
@@ -280,11 +316,12 @@ public class NewTurnScript : MonoBehaviour
 
     public void playerResetAtNewLevel()
     {
-        playerStats.resetStats();
+        playerStats.resetStats(false);
         energyManager.ResetEnergy();
 
         cardManager.ChangeCardsWithState(CardState.Exhausted, CardState.InDrawPile);
         cardManager.ChangeCardsWithState(CardState.InDiscardPile, CardState.InDrawPile);
+        cardManager.ChangeCardsWithState(CardState.InHand, CardState.InDrawPile);
         cardManager.newHand();
         playerStats.UpdatePropsUI();
         enemyStats.UpdatePropsUI();
@@ -336,7 +373,10 @@ public class NewTurnScript : MonoBehaviour
         currentTurnIndex = 0;
         if(currentEnemyIndex >= 0)
         {
-            cardManager.SelectCardsMode(cardsToUnlock, CardSelectionType.Unlock);
+            if(currentEnemyIndex + 1 < enemies.Length)
+            {
+                cardManager.SelectCardsMode(cardsToUnlock, CardSelectionType.Unlock);
+            }
             enemies[currentEnemyIndex].SetActive(false);
         }
         if(currentEnemyIndex + 1 < enemies.Length)
@@ -344,11 +384,16 @@ public class NewTurnScript : MonoBehaviour
             currentEnemyIndex++;
             enemies[currentEnemyIndex].SetActive(true);
             enemyStats = enemies[currentEnemyIndex].GetComponent<healthBarScript>();
+            enemyStats.UpdatePropsUI();
+            enemyStats.updateSliderValue();
             ChooseAnotherActionForEnemy();
         }
         else
         {
+            cardManager.hasUnlocked = true;
+            gameOverMessage.gameObject.SetActive(true);
             print("GAMEOVER");
+            gameObject.SetActive(false);
         }
         print(enemyStats.name);
     }
