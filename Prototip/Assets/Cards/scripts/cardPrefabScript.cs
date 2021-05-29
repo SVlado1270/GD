@@ -32,6 +32,8 @@ public class Effect
         intangible = 0;
         wraith = 0;
         ritual = 0;
+        heal = 0;
+        energyNextTurn = 0;
     }
     public int damage;
     public int shield;
@@ -51,6 +53,8 @@ public class Effect
     public int intangible;
     public int wraith;
     public int ritual;
+    public int heal;
+    public int energyNextTurn;
     public TargetType targetType;
 
     public void ApplyMeta()
@@ -69,6 +73,10 @@ public class Effect
             int cardsInHand = cardManager.CountCardsWithState(CardState.InHand);
             cardManager.DiscardCardsWithState(CardState.InHand);
             cardManager.InstantiateShiv(cardsInHand);
+        }
+        if (energyNextTurn > 0)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<energyManagerScript>().energyNextTurn = energyNextTurn;
         }
     }
 };

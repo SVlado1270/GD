@@ -346,6 +346,11 @@ public class healthBarScript : MonoBehaviour
             sender.UpdatePropsUI();
         }
 
+        if (e.heal > 0)
+        {
+            int newHealth = health + e.heal;
+            health = newHealth > maxHealth ? maxHealth : newHealth;
+        }
         applyDamage(damage);
 
         if(e.shield > 0)
@@ -356,6 +361,8 @@ public class healthBarScript : MonoBehaviour
                 shield += delta_shield;
             }
         }
+
+
         e.ApplyMeta();
 
         UpdatePropsUI();

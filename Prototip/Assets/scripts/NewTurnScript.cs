@@ -81,7 +81,7 @@ public class NewTurnScript : MonoBehaviour
             case "fungi":
                 {
                     float p = Random.Range(0f, 100f);
-                    if (p <= 35f)
+                    if (p <= 55f)
                     {
                         int poison = Random.Range(3, 8);
                         string hoverText = "This enemy intends to apply " + poison.ToString() + " poison.";
@@ -167,7 +167,25 @@ public class NewTurnScript : MonoBehaviour
                 }
             case "collector":
                 {
-                    break;
+                    float p = Random.Range(0f, 100f);
+                    if (p < 50f)
+                    {
+                        int shield = 15;
+                        int strength = 3;
+                        string hoverText = "This enemy intends to defend.";
+                        enemyStats.UpdateIntent("defend_buff_intent", shield, hoverText);
+                        enemyEffect = new Effect(TargetType.Enemy) { shield = shield, strength = strength };
+                        break;
+                    }
+                    else
+                    {
+                        int strength = -3;
+                        int damage = Random.Range(4, 7);
+                        string hoverText = "This enemy intends to attack and use a debuff.";
+                        enemyStats.UpdateIntent("attack_debuff_intent", damage, hoverText);
+                        enemyEffect = new Effect(TargetType.Player) { damage = damage, strength = strength };
+                        break;
+                    }
                 }
         }
         currentTurnIndex++;
@@ -265,6 +283,7 @@ public class NewTurnScript : MonoBehaviour
         playerStats.resetStats();
         energyManager.ResetEnergy();
 
+        cardManager.ChangeCardsWithState(CardState.Exhausted, CardState.InDrawPile);
         cardManager.ChangeCardsWithState(CardState.InDiscardPile, CardState.InDrawPile);
         cardManager.newHand();
         playerStats.UpdatePropsUI();

@@ -285,12 +285,12 @@ PrefabInstance:
     - target: {fileID: 4049669793133662792, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.691
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4049669793133662792, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4049669793799344744, guid: e775662bd605f5446bb8231e6b449189,
         type: 3}
@@ -1977,7 +1977,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 100
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -2530,7 +2530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &750653672
 Transform:
   m_ObjectHideFlags: 0
@@ -2562,7 +2562,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 200
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -3188,7 +3188,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ea8fd19315cd0dc48835ab01773ce38a, type: 3}
   - {fileID: 21300000, guid: a57154a611cf8b44d8cd9fff866a0522, type: 3}
   - {fileID: 21300000, guid: c002e798a78213b499e644a3f577a8b5, type: 3}
-  - {fileID: 21300000, guid: d0dc08104b8c3de47b490efceed8170c, type: 3}
+  - {fileID: 21300000, guid: 381cf1bc88aef104a90aba604cb185b2, type: 3}
   - {fileID: 21300000, guid: d23f0424c5f76fa4d9552ef4a6258d21, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
   - {fileID: 21300000, guid: 4d56b237f8bcdd748baa117f4090378f, type: 3}
@@ -3198,8 +3198,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fea8c65457f9af347a80db772fac22b0, type: 3}
   - {fileID: 21300000, guid: 1ad4f19d18aa05341aba9012caa3460e, type: 3}
   - {fileID: 21300000, guid: 1d0f860f5a485964084d58506efbf29e, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
-  - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
+  - {fileID: 21300000, guid: e6b5d4eae0a145644921ec3b5c7a77ff, type: 3}
+  - {fileID: 21300000, guid: 400f7975d95558148b8cbd60e4788497, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
   - {fileID: 21300000, guid: 182cfafbd08d3ee48a55026473679ff4, type: 3}
@@ -3382,7 +3382,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 35
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -3505,7 +3505,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 60
   shield: 0
   health: 45
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -4496,7 +4496,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 35
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -5755,6 +5755,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energyCountText: {fileID: 71772678}
+  energyNextTurn: 0
 --- !u!4 &1603011744
 Transform:
   m_ObjectHideFlags: 0
@@ -7476,7 +7477,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 45
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -7541,7 +7542,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 200
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
@@ -7606,7 +7607,7 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 10
+  maxHealth: 56
   shield: 0
   health: 30
   porpsPivotPoint: {x: 0, y: 0, z: 0}
