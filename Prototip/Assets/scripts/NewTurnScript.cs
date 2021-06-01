@@ -373,7 +373,7 @@ public class NewTurnScript : MonoBehaviour
         currentTurnIndex = 0;
         if(currentEnemyIndex >= 0)
         {
-            if(currentEnemyIndex + 1 < enemies.Length)
+            if(currentEnemyIndex + 1 < enemies.Length && cardManager.CountCardsWithState(CardState.Locked) > 0)
             {
                 cardManager.SelectCardsMode(cardsToUnlock, CardSelectionType.Unlock);
             }
