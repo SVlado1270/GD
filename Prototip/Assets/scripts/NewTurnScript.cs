@@ -148,7 +148,7 @@ public class NewTurnScript : MonoBehaviour
             case "corruptHeart":
                 {
                     float p = Random.Range(0f, 100f);
-                    if(p < 33f)
+                    if(p < 45f)
                     {
                         int damage = 10;
                         string hoverText = "This enemy intends to attack for " + damage.ToString() + " damage.";
@@ -159,7 +159,7 @@ public class NewTurnScript : MonoBehaviour
                     else
                     {
                         int shield = 10;
-                        int strength = Random.Range(3, 6);
+                        int strength = Random.Range(1, 6);
                         string hoverText = "This enemy intends to defend and use a buff.";
                         enemyStats.UpdateIntent("defend_buff_intent", shield, hoverText);
                         enemyEffect = new Effect(TargetType.Enemy) { shield = shield, strength = strength };
@@ -173,14 +173,14 @@ public class NewTurnScript : MonoBehaviour
                     {
                         int shield = 15;
                         int strength = 3;
-                        string hoverText = "This enemy intends to defend.";
+                        string hoverText = "This enemy intends to defend and use a buff.";
                         enemyStats.UpdateIntent("defend_buff_intent", shield, hoverText);
                         enemyEffect = new Effect(TargetType.Enemy) { shield = shield, strength = strength };
                         break;
                     }
                     else
                     {
-                        int strength = -3;
+                        int strength = -1;
                         int damage = Random.Range(4, 7);
                         string hoverText = "This enemy intends to attack and use a debuff.";
                         enemyStats.UpdateIntent("attack_debuff_intent", damage, hoverText);
@@ -382,6 +382,12 @@ public class NewTurnScript : MonoBehaviour
         if(currentEnemyIndex + 1 < enemies.Length)
         {
             currentEnemyIndex++;
+
+            if(currentTurnIndex > 5)
+            {
+                playerStats.applyHeal(5);
+            }
+
             enemies[currentEnemyIndex].SetActive(true);
             enemyStats = enemies[currentEnemyIndex].GetComponent<healthBarScript>();
             enemyStats.UpdatePropsUI();

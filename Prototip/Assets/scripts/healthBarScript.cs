@@ -356,8 +356,7 @@ public class healthBarScript : MonoBehaviour
 
         if (e.heal > 0)
         {
-            int newHealth = health + e.heal;
-            health = newHealth > maxHealth ? maxHealth : newHealth;
+            applyHeal(e.heal);
         }
         applyDamage(damage);
 
@@ -376,7 +375,11 @@ public class healthBarScript : MonoBehaviour
         UpdatePropsUI();
     }
 
-
+    public void applyHeal(int value)
+    {
+        int newHealth = health + value;
+        health = newHealth > maxHealth ? maxHealth : newHealth;
+    }
     // Update is called once per frame
     void Update()
     {

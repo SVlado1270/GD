@@ -5790,9 +5790,9 @@ MonoBehaviour:
   bar: {fileID: 0}
   barText: {fileID: 0}
   endText: {fileID: 0}
-  maxHealth: 30
+  maxHealth: 55
   shield: 0
-  health: 30
+  health: 55
   porpsPivotPoint: {x: 0, y: 0, z: 0}
   weak: 0
   retain: 0
